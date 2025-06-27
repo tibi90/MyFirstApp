@@ -5,6 +5,7 @@ import {
   TextInput,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import ToggleSwitch from './ToggleSwitch';
 import { globalStyles, colors } from '../styles/styles';
 
 const InputSection = ({ title, inputs, values, onValueChange, errors = {} }) => {
@@ -55,6 +56,38 @@ const InputSection = ({ title, inputs, values, onValueChange, errors = {} }) => 
             </Picker>
           </View>
           {error && <Text style={globalStyles.errorText}>{error}</Text>}
+        </View>
+      );
+    }
+
+    if (input.type === 'toggle') {
+      return (
+        <View key={input.key} style={globalStyles.inputRow}>
+          <ToggleSwitch
+            label={input.label}
+            value={value}
+            onValueChange={(newValue) => onValueChange(input.key, newValue)}
+          />
+        </View>
+      );
+    }
+
+    if (input.type === 'conditional') {
+      // Show toggle and additional input if toggle is on
+      return (
+        <View key={input.key}>
+          <View style={globalStyles.inputRow}>
+            <ToggleSwitch
+              label={input.label}
+              value={value}
+              onValueChange={(newValue) => onValueChange(input.key, newValue)}
+            />
+          </View>
+          {value && input.conditionalInput && (
+            <View style={{ marginLeft: 20 }}>
+              {renderInput({ ...input.conditionalInput, key: input.conditionalInput.key })}
+            </View>
+          )}
         </View>
       );
     }

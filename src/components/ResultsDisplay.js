@@ -19,6 +19,13 @@ const ResultsDisplay = ({ results }) => {
         Average Wounds Dealt
       </Text>
 
+      {results.mortalWounds && parseFloat(results.mortalWounds) > 0 && (
+        <View style={[globalStyles.resultRow, { backgroundColor: 'rgba(204, 0, 0, 0.2)', padding: 8, marginBottom: 10 }]}>
+          <Text style={globalStyles.resultLabel}>Mortal Wounds Included:</Text>
+          <Text style={[globalStyles.resultValue, { color: '#cc0000' }]}>{results.mortalWounds}</Text>
+        </View>
+      )}
+
       <View style={globalStyles.resultRow}>
         <Text style={globalStyles.resultLabel}>Total Attacks:</Text>
         <Text style={globalStyles.resultValue}>{results.totalAttacks}</Text>
@@ -29,10 +36,24 @@ const ResultsDisplay = ({ results }) => {
         <Text style={globalStyles.resultValue}>{results.hitRate}%</Text>
       </View>
 
+      {results.details && results.details.totalHits && (
+        <View style={globalStyles.resultRow}>
+          <Text style={globalStyles.resultLabel}>Expected Hits:</Text>
+          <Text style={globalStyles.resultValue}>{results.details.totalHits}</Text>
+        </View>
+      )}
+
       <View style={globalStyles.resultRow}>
         <Text style={globalStyles.resultLabel}>Wound Chance:</Text>
         <Text style={globalStyles.resultValue}>{results.woundRate}%</Text>
       </View>
+
+      {results.details && results.details.autoWounds && parseFloat(results.details.autoWounds) > 0 && (
+        <View style={globalStyles.resultRow}>
+          <Text style={globalStyles.resultLabel}>Auto-wounds (Lethal Hits):</Text>
+          <Text style={globalStyles.resultValue}>{results.details.autoWounds}</Text>
+        </View>
+      )}
 
       <View style={[globalStyles.resultRow, { borderBottomWidth: 0 }]}>
         <Text style={globalStyles.resultLabel}>Failed Save Chance:</Text>
