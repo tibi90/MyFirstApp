@@ -1,6 +1,34 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# MyFirstApp - Holiday Inn Concierge
 
-# Getting Started
+React Native app for Holiday Inn hotel concierge services.
+
+## Building APK with GitHub Actions
+
+This project uses GitHub Actions to automatically build Android APKs.
+
+### Setup Instructions:
+
+1. **Create a GitHub repository**
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit"
+   git branch -M main
+   git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+   git push -u origin main
+   ```
+
+2. **Trigger a build**
+   - Push to main branch: Automatically builds and creates a release
+   - Manual trigger: Go to Actions tab → Build Android APK → Run workflow
+
+3. **Download APK**
+   - Go to the Actions tab in your GitHub repository
+   - Click on the latest workflow run
+   - Download the APK from the Artifacts section
+   - Or check the Releases section for published APKs
+
+## Getting Started
 
 > **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
 
