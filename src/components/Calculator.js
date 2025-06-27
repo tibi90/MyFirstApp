@@ -80,26 +80,8 @@ const Calculator = () => {
   };
 
   const validateInputs = () => {
-    const newErrors = {};
-    
-    if (values.models < 1 || values.models > 100) {
-      newErrors.models = 'Must be between 1 and 100';
-    }
-    if (values.attacksPerModel < 1 || values.attacksPerModel > 20) {
-      newErrors.attacksPerModel = 'Must be between 1 and 20';
-    }
-    if (values.weaponStrength < 1 || values.weaponStrength > 20) {
-      newErrors.weaponStrength = 'Must be between 1 and 20';
-    }
-    if (values.damage < 1 || values.damage > 10) {
-      newErrors.damage = 'Must be between 1 and 10';
-    }
-    if (values.toughness < 1 || values.toughness > 20) {
-      newErrors.toughness = 'Must be between 1 and 20';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    // No validation constraints - allow any positive numbers
+    return true;
   };
 
   const handleValueChange = (key, value) => {

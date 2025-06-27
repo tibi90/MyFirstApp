@@ -21,12 +21,10 @@ const InputSection = ({ title, inputs, values, onValueChange, errors = {} }) => 
             value={String(value)}
             onChangeText={(text) => {
               const num = parseInt(text) || 0;
-              if (input.min !== undefined && num < input.min) return;
-              if (input.max !== undefined && num > input.max) return;
               onValueChange(input.key, num);
             }}
             keyboardType="numeric"
-            placeholder={`${input.min || 1} - ${input.max || 99}`}
+            placeholder="Enter value"
             placeholderTextColor={colors.textSecondary}
           />
           {error && <Text style={globalStyles.errorText}>{error}</Text>}
