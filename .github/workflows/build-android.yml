@@ -12,23 +12,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-    
-    - name: Install dependencies
-      run: npm ci
-    
     - uses: actions/setup-java@v4
       with:
         distribution: 'zulu'
-        java-version: '11'
-    
-    - name: Bundle JavaScript
-      run: |
-        mkdir -p android/app/src/main/assets
-        npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle
+        java-version: '17'
     
     - name: Build APK
       run: |
