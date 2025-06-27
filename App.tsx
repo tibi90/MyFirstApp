@@ -7,6 +7,11 @@ import {
 } from 'react-native';
 
 function App(): JSX.Element {
+  React.useEffect(() => {
+    console.log('MyFirstApp started!');
+    console.log('Current time:', new Date().toISOString());
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.center}>
