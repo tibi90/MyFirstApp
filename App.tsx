@@ -15,7 +15,7 @@ import EmergencyScreen from './src/screens/EmergencyScreen';
 
 type Screen = 'Login' | 'Home' | 'FlatInfo' | 'Passwords' | 'Activities' | 'Emergency';
 
-function App() {
+const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentScreen, setCurrentScreen] = useState<Screen>('Home');
 
@@ -61,7 +61,7 @@ function App() {
       {renderScreen()}
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
