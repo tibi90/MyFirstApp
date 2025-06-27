@@ -3,6 +3,7 @@
     package="com.myfirstapp">
 
     <application
+        android:name=".MainApplication"
         android:label="Hello World">
         <activity
             android:name=".MainActivity"
