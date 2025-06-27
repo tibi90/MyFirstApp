@@ -62,11 +62,11 @@ export const globalStyles = StyleSheet.create({
     borderColor: colors.border,
     borderRadius: 4,
     height: 44,
-    color: colors.text,
+    justifyContent: 'center',
   },
   pickerItem: {
-    backgroundColor: colors.background,
-    color: colors.text,
+    backgroundColor: colors.text,
+    color: colors.background,
   },
   button: {
     backgroundColor: colors.primary,

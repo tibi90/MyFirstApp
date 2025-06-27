@@ -40,15 +40,16 @@ const InputSection = ({ title, inputs, values, onValueChange, errors = {} }) => 
             <Picker
               selectedValue={value}
               onValueChange={(itemValue) => onValueChange(input.key, itemValue)}
-              style={{ color: colors.text }}
+              style={{ color: colors.text, height: 44 }}
               dropdownIconColor={colors.text}
+              mode="dropdown"
+              prompt={input.label}
             >
               {input.options.map((option) => (
                 <Picker.Item
                   key={option.value}
                   label={option.label}
                   value={option.value}
-                  color={colors.text}
                 />
               ))}
             </Picker>
