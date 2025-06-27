@@ -61,6 +61,7 @@ jobs:
         path: android/app/build/outputs/apk/release/app-release.apk
 
     - name: Create Release
+      id: create_release
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       uses: actions/create-release@v1
       env:
