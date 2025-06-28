@@ -25,4 +25,18 @@ allprojects {
         maven { url "https://www.jitpack.io" }
         maven { url "https://maven.google.com" }
     }
+    
+    // Force compatible versions for React Native 0.72.x
+    configurations.all {
+        resolutionStrategy {
+            force 'androidx.appcompat:appcompat:1.6.1'
+            force 'androidx.appcompat:appcompat-resources:1.6.1'
+            force 'androidx.core:core:1.9.0'
+            force 'androidx.core:core-ktx:1.9.0'
+            force 'androidx.activity:activity:1.6.0'
+            force 'androidx.activity:activity-ktx:1.6.0'
+            force 'androidx.fragment:fragment:1.5.5'
+            force 'androidx.fragment:fragment-ktx:1.5.5'
+        }
+    }
 }
