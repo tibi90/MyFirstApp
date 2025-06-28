@@ -20,7 +20,7 @@ export const globalStyles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 30,
+    paddingBottom: 120,
   },
   section: {
     backgroundColor: colors.surface,

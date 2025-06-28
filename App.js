@@ -4,13 +4,13 @@ import {
   StatusBar,
   StyleSheet,
 } from 'react-native';
-import Calculator from './src/components/Calculator';
+import Navigation from './src/components/Navigation';
 
 const App = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#0a0a0a" />
-      <Calculator />
+      <Navigation />
     </SafeAreaView>
   );
 };
