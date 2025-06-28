@@ -1,125 +1,311 @@
-# MyFirstApp - Holiday Inn Concierge
+# Warhammer 40,000 Wound Calculator
 
-React Native app for Holiday Inn hotel concierge services.
+A React Native Android application for calculating combat outcomes in Warhammer 40,000 10th Edition. This app provides a comprehensive damage calculator with all the special rules and modifiers from the tabletop game.
 
-## Building APK with GitHub Actions
+## 📱 Features
 
-This project uses GitHub Actions to automatically build Android APKs.
+### Core Functionality
+- **Multi-page navigation system** with progress indicators
+- **Real-time combat calculations** following official WH40k 10th Edition rules
+- **Persistent data storage** using AsyncStorage
+- **Dark theme UI** with Warhammer-inspired red and gold accents
+- **Dice mechanics** for random attack generation (D6 + modifiers)
 
-### Setup Instructions:
+### Combat Phases
 
-1. **Create a GitHub repository**
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit"
-   git branch -M main
-   git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
-   git push -u origin main
-   ```
+#### 1. Models & Attacks (First Page)
+- Number of models in the attacking unit
+- Attacks per model with options for:
+  - Fixed number input
+  - D6 dice rolls (1D6, 2D6, etc.)
+  - Fixed bonuses (e.g., D6+1)
+  - Interactive dice rolling button
+- Total attacks calculation display
 
-2. **Trigger a build**
-   - Push to main branch: Automatically builds and creates a release
-   - Manual trigger: Go to Actions tab → Build Android APK → Run workflow
+#### 2. Hit Rolls (Second Page)
+- Weapon Skill selection (2+ through 6+)
+- Hit roll modifiers (-2 to +2)
+- Re-roll options (1s, All Failed, All)
+- Special rules:
+  - Torrent (auto-hit)
+  - Lethal Hits (critical hits auto-wound)
+  - Sustained Hits (extra hits on criticals)
+  - Precision
+  - Hazardous
+  - Twin-linked
+- **Live hit probability percentage display**
 
-3. **Download APK**
-   - Go to the Actions tab in your GitHub repository
-   - Click on the latest workflow run
-   - Download the APK from the Artifacts section
-   - Or check the Releases section for published APKs
+#### 3. Wound Rolls (Third Page)
+- Weapon Strength input
+- Armor Piercing (AP 0 to -6)
+- Damage value
+- Target Toughness
+- Target Unit Size (for Blast calculations)
+- Wound modifiers (-2 to +2)
+- Re-roll wounds options
+- Special rules:
+  - Anti-X (improved wound rolls vs specific targets)
+  - Devastating Wounds (mortal wounds on criticals)
+  - Blast (extra hits based on unit size)
+- **Live wound probability percentage display**
 
-## Getting Started
+#### 4. Saving Throws (Fourth Page)
+- Armor Save (2+ through 7+)
+- Invulnerable Save options
+- Feel No Pain rolls
+- Cover bonus (+1 to saves)
+- **Live save probability displays**:
+  - Armor save chance (after AP)
+  - Invulnerable save chance
+  - Feel No Pain chance
+  - Total survival probability
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+#### 5. Battle Results (Fifth Page)
+- Comprehensive damage calculations showing:
+  - Average wounds dealt
+  - Models killed
+  - Damage output
+  - Hit/wound/save probabilities
+  - Detailed breakdown by phase
+- **Reset All Values** button that returns to first page
 
-## Step 1: Start Metro
+## 🛠 Technical Stack
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+### Core Technologies
+- **React Native** 0.72.10
+- **React** 18.2.0
+- **Node.js** 18.x
+- **Java** 11 (for Android builds)
 
-To start the Metro dev server, run the following command from the root of your React Native project:
-
-```sh
-# Using npm
-npm start
-
-# OR using Yarn
-yarn start
+### Key Dependencies
+```json
+{
+  "@react-native-async-storage/async-storage": "^1.19.8",
+  "@react-native-picker/picker": "^2.6.1",
+  "@react-navigation/native": "^6.1.9",
+  "@react-navigation/stack": "^6.3.20",
+  "react-native-screens": "~3.20.0",
+  "react-native-safe-area-context": "4.5.0",
+  "react-native-gesture-handler": "~2.9.0"
+}
 ```
 
-## Step 2: Build and run your app
+### Build Configuration
+- **Android Gradle Plugin**: 7.4.2
+- **Gradle Wrapper**: 7.6.3
+- **Compile SDK**: 33
+- **Target SDK**: 33
+- **Min SDK**: 21
+- **Kotlin**: 1.7.22
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+## 📂 Project Structure
 
-### Android
-
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
+```
+MyFirstApp/
+├── android/                    # Android native code
+│   ├── app/
+│   │   ├── build.gradle       # App-level build config
+│   │   └── src/main/
+│   │       ├── java/          # Native Android code
+│   │       └── res/           # Android resources
+│   └── build.gradle           # Project-level build config
+├── src/
+│   ├── components/
+│   │   ├── Navigation.js      # Main navigation controller
+│   │   ├── InputSection.js    # Reusable input component
+│   │   ├── ResultsDisplay.js  # Results visualization
+│   │   ├── ToggleSwitch.js    # Custom toggle component
+│   │   └── pages/
+│   │       ├── AttacksPage.js # Models & attacks input
+│   │       ├── HitPage.js     # Hit roll configuration
+│   │       ├── WoundPage.js   # Wound roll settings
+│   │       ├── SavePage.js    # Save configuration
+│   │       └── ResultsPage.js # Final calculations
+│   ├── styles/
+│   │   └── styles.js          # Global styles and theme
+│   └── utils/
+│       └── combatCalculations.js # Core combat math
+├── .github/
+│   └── workflows/
+│       └── build-android.yml  # GitHub Actions CI/CD
+├── App.js                     # Root component
+├── index.js                   # Entry point
+├── package.json               # Dependencies
+└── README.md                  # This file
 ```
 
-### iOS
+## 🚀 Getting Started
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+### Prerequisites
+- Node.js 18 or higher
+- npm or yarn
+- Android Studio (for local builds)
+- Android SDK 33
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+### Installation
 
-```sh
-bundle install
+1. Clone the repository:
+```bash
+git clone https://github.com/tibi90/MyFirstApp.git
+cd MyFirstApp
 ```
 
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
+2. Install dependencies:
+```bash
+npm install
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+3. For Android development:
+```bash
+# Start Metro bundler
+npx react-native start
 
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
+# In another terminal, run Android
+npx react-native run-android
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+### Building APK
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+#### Local Build:
+```bash
+cd android
+./gradlew assembleDebug
+# APK will be in android/app/build/outputs/apk/debug/
+```
 
-## Step 3: Modify your app
+#### GitHub Actions:
+- APK builds automatically on push to main branch
+- Download from Actions tab → latest workflow run → Artifacts
 
-Now that you have successfully run the app, let's make changes!
+## 🎮 Usage Guide
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+### Basic Workflow
+1. **Set up your attacking unit** - Enter number of models and attacks
+2. **Configure hit rolls** - Set weapon skill and modifiers
+3. **Set wound parameters** - Enter strength, AP, and damage
+4. **Configure saves** - Input defender's save characteristics
+5. **View results** - See complete damage calculations
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+### Dice Mechanics
+- Select number of D6 to roll (0-6)
+- Add fixed bonus if needed
+- Tap "Roll Dice" to generate random attacks
+- Or use fixed number input for consistent values
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+### Tips
+- All inputs are automatically saved
+- Tap progress dots to jump between pages
+- Use reset button to start fresh calculation
+- Probability percentages update in real-time
 
-## Congratulations! :tada:
+## 🧮 Combat Calculations
 
-You've successfully run and modified your React Native App. :partying_face:
+### Hit Probability
+```javascript
+baseHit = (7 - weaponSkill) / 6
+modifiedHit = applyModifiers(baseHit, hitModifier)
+finalHit = applyRerolls(modifiedHit, rerollType)
+```
 
-### Now what?
+### Wound Probability
+- S ≥ 2×T: Wounds on 2+
+- S > T: Wounds on 3+
+- S = T: Wounds on 4+
+- S < T: Wounds on 5+
+- S ≤ T/2: Wounds on 6+
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+### Save Calculations
+- Best of armor save (modified by AP) or invulnerable save
+- Feel No Pain applied after failed saves
+- Total survival = 1 - (failSave × failFNP)
 
-# Troubleshooting
+## 🎨 UI/UX Design
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+### Color Scheme
+- **Background**: #1a1a1a (Dark grey)
+- **Surface**: #2a2a2a (Lighter grey)
+- **Primary**: #cc0000 (Blood red)
+- **Secondary**: #ffd700 (Gold)
+- **Text**: #ffffff (White)
+- **Text Secondary**: #cccccc (Light grey)
 
-# Learn More
+### Typography
+- Headers: 24px bold
+- Section titles: 20px bold
+- Labels: 14px regular
+- Results: 48px bold
 
-To learn more about React Native, take a look at the following resources:
+## 🔧 Development
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+### Code Style
+- Functional React components with hooks
+- Modular component structure
+- Centralized styling system
+- Pure calculation functions
+
+### State Management
+- React useState for local state
+- AsyncStorage for persistence
+- Props drilling for data flow
+
+### Testing
+```bash
+npm test
+```
+
+### Linting
+```bash
+npm run lint
+```
+
+## 📦 CI/CD
+
+### GitHub Actions Workflow
+- Triggers on push to main branch
+- Installs Node.js 18 and Java 11
+- Cleans npm cache
+- Installs dependencies
+- Bundles JavaScript
+- Builds debug APK
+- Uploads as artifact
+
+### Workflow File
+See `.github/workflows/build-android.yml`
+
+## 🐛 Known Issues
+
+1. **Picker styling** - Dropdowns may show white on some Android versions
+   - Fixed with custom Android theme styles
+
+2. **Kotlin compatibility** - Some navigation libraries require specific versions
+   - Pinned to compatible versions in package.json
+
+3. **AndroidX versions** - Conflicts with SDK 33
+   - Force resolution strategy in build.gradle
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
+
+## 📄 License
+
+This project is private and not licensed for public use.
+
+## 🙏 Acknowledgments
+
+- Games Workshop for Warhammer 40,000
+- React Native community
+- Claude AI for development assistance
+
+## 📞 Contact
+
+- GitHub: [@tibi90](https://github.com/tibi90)
+- Project: [MyFirstApp](https://github.com/tibi90/MyFirstApp)
+
+---
+
+*For the Emperor! May your dice rolls be ever in your favor.*
