@@ -13,9 +13,6 @@ android {
     namespace 'com.myfirstapp'
     compileSdkVersion rootProject.ext.compileSdkVersion
     
-    buildFeatures {
-        buildConfig true
-    }
     
     defaultConfig {
         applicationId "com.myfirstapp"
