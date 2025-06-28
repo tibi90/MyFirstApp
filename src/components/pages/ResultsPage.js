@@ -9,7 +9,7 @@ import ResultsDisplay from '../ResultsDisplay';
 import { calculateAverageWounds } from '../../utils/combatCalculations';
 import { globalStyles, colors } from '../../styles/styles';
 
-const ResultsPage = ({ values, onValueChange }) => {
+const ResultsPage = ({ values, onValueChange, onNavigate }) => {
   const [results, setResults] = useState(null);
 
   useEffect(() => {
@@ -94,6 +94,9 @@ const ResultsPage = ({ values, onValueChange }) => {
     Object.entries(defaultValues).forEach(([key, value]) => {
       onValueChange(key, value);
     });
+    
+    // Navigate to first page
+    onNavigate(0);
   };
 
   return (

@@ -6,8 +6,8 @@ import {
   StyleSheet,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import AttackerPage from './pages/AttackerPage';
-import HitModifiersPage from './pages/HitModifiersPage';
+import AttacksPage from './pages/AttacksPage';
+import HitPage from './pages/HitPage';
 import WoundPage from './pages/WoundPage';
 import SavePage from './pages/SavePage';
 import ResultsPage from './pages/ResultsPage';
@@ -53,11 +53,11 @@ const Navigation = () => {
   });
 
   const pages = [
-    { title: 'Basic Attack Profile', component: AttackerPage },
-    { title: 'Hit Modifiers', component: HitModifiersPage },
-    { title: 'Wound Modifiers', component: WoundPage },
-    { title: 'Saves & Defense', component: SavePage },
-    { title: 'Results', component: ResultsPage },
+    { title: 'Models & Attacks', component: AttacksPage },
+    { title: 'Hit Rolls', component: HitPage },
+    { title: 'Wound Rolls', component: WoundPage },
+    { title: 'Saving Throws', component: SavePage },
+    { title: 'Battle Results', component: ResultsPage },
   ];
 
   useEffect(() => {
@@ -138,6 +138,7 @@ const Navigation = () => {
       <PageComponent
         values={values}
         onValueChange={handleValueChange}
+        onNavigate={setCurrentPage}
       />
 
       {/* Navigation Buttons */}
