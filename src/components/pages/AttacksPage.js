@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import ToggleSwitch from '../ToggleSwitch';
 import { globalStyles, colors } from '../../styles/styles';
 
 const AttacksPage = ({ values, onValueChange }) => {
@@ -158,6 +159,32 @@ const AttacksPage = ({ values, onValueChange }) => {
         <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text }]}>
           {values.models} models × {values.attacksPerModel} attacks
         </Text>
+      </View>
+
+      {/* Blast Rule */}
+      <View style={globalStyles.section}>
+        <Text style={globalStyles.sectionTitle}>Special Rules</Text>
+        
+        <View style={globalStyles.inputRow}>
+          <ToggleSwitch
+            label="Blast"
+            value={values.blast}
+            onValueChange={(newValue) => onValueChange('blast', newValue)}
+          />
+        </View>
+        
+        {values.blast && (
+          <View style={globalStyles.inputRow}>
+            <Text style={globalStyles.label}>Blast Hits per 5 Models</Text>
+            <TextInput
+              style={globalStyles.input}
+              value={String(values.blastMultiplier || 1)}
+              onChangeText={(text) => onValueChange('blastMultiplier', parseInt(text) || 1)}
+              keyboardType="numeric"
+              placeholder="1"
+            />
+          </View>
+        )}
       </View>
     </ScrollView>
   );

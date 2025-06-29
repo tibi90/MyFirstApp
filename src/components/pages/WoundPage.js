@@ -67,7 +67,6 @@ const WoundPage = ({ values, onValueChange }) => {
   const specialRules = [
     { key: 'antiTarget', label: 'Anti-X', type: 'toggle' },
     { key: 'devastatingWounds', label: 'Devastating Wounds', type: 'toggle' },
-    { key: 'blast', label: 'Blast', type: 'toggle' },
   ];
 
   const conditionalInputs = [];
@@ -83,13 +82,6 @@ const WoundPage = ({ values, onValueChange }) => {
         { label: '5+', value: '5+' },
         { label: '6+', value: '6+' },
       ],
-    });
-  }
-  if (values.blast) {
-    conditionalInputs.push({
-      key: 'blastMultiplier',
-      label: 'Blast Hits per 5 Models',
-      type: 'number',
     });
   }
 
