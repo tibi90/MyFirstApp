@@ -118,6 +118,8 @@ const HitPage = ({ values, onValueChange }) => {
         setHitStatistics(stats);
         setTotalHits(parseFloat(stats.expectedValue));
         setSustainedHitsCount(totalAttacks * critRate * sustainedValue);
+        // Store total hits for other pages
+        onValueChange('totalHits', parseFloat(stats.expectedValue));
       } else {
         // Simple torrent - all attacks hit
         const distribution = [{
@@ -133,6 +135,8 @@ const HitPage = ({ values, onValueChange }) => {
           modes: [totalAttacks],
           modePercentage: "100.0"
         });
+        // Store total hits for other pages
+        onValueChange('totalHits', totalAttacks);
       }
       return;
     }
@@ -175,6 +179,9 @@ const HitPage = ({ values, onValueChange }) => {
     setHitDistribution(distribution);
     setHitStatistics(stats);
     setTotalHits(parseFloat(stats.expectedValue));
+    
+    // Store total hits in shared values for use in other pages
+    onValueChange('totalHits', parseFloat(stats.expectedValue));
     
     // Calculate sustained hits separately for display
     if (values.sustainedHits) {

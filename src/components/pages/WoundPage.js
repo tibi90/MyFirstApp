@@ -5,10 +5,19 @@ import {
   Text,
 } from 'react-native';
 import InputSection from '../InputSection';
+import ProbabilityDistribution from '../ProbabilityDistribution';
 import { globalStyles, colors } from '../../styles/styles';
+import { 
+  generateDistribution, 
+  calculateStatistics,
+  adjustProbabilityForRerolls 
+} from '../../utils/probabilityCalculations';
 
 const WoundPage = ({ values, onValueChange }) => {
   const [woundChance, setWoundChance] = useState(0);
+  const [totalWounds, setTotalWounds] = useState(0);
+  const [woundDistribution, setWoundDistribution] = useState(null);
+  const [woundStatistics, setWoundStatistics] = useState(null);
 
   const weaponInputs = [
     {
@@ -85,11 +94,20 @@ const WoundPage = ({ values, onValueChange }) => {
     });
   }
 
-  // Calculate wound chance
+  // Calculate wound chance and distribution
   useEffect(() => {
     const strength = values.weaponStrength;
     const toughness = values.toughness;
     const modifier = parseInt(values.woundModifier);
+    
+    // Get the number of hits from previous page calculations
+    const numHits = Math.round(values.totalHits || 0);
+    
+    if (!numHits || numHits === 0 || !strength || !toughness) {
+      setWoundDistribution(null);
+      setWoundStatistics(null);
+      return;
+    }
     
     let baseWound;
     if (strength >= toughness * 2) {
@@ -108,26 +126,31 @@ const WoundPage = ({ values, onValueChange }) => {
     const modifiedWound = Math.max(2, Math.min(6, baseWound - modifier));
     
     // Calculate base chance
-    let chance = (7 - modifiedWound) / 6;
+    let baseChance = (7 - modifiedWound) / 6;
     
     // Apply Anti-X
     if (values.antiTarget) {
       const antiThreshold = parseInt(values.antiTargetThreshold.replace('+', ''));
       const antiChance = (7 - antiThreshold) / 6;
-      chance = Math.max(chance, antiChance);
+      baseChance = Math.max(baseChance, antiChance);
     }
     
-    // Apply re-rolls
-    if (values.rerollWounds === 'Re-roll 1s') {
-      chance += (1/6) * chance;
-    } else if (values.rerollWounds === 'Re-roll All Failed') {
-      chance += (1 - chance) * chance;
-    } else if (values.rerollWounds === 'Re-roll All') {
-      chance = 1 - (1 - chance) * (1 - chance);
-    }
+    // Apply re-rolls with proper handling
+    const rerollType = values.rerollWounds || 'None';
+    const critRate = 1/6; // Standard critical rate for wounds
+    const adjustedWoundProb = adjustProbabilityForRerolls(baseChance, rerollType, critRate);
     
-    setWoundChance(Math.round(chance * 100));
-  }, [values.weaponStrength, values.toughness, values.woundModifier, values.rerollWounds, values.antiTarget, values.antiTargetThreshold]);
+    setWoundChance(Math.round(adjustedWoundProb * 100));
+    
+    // Generate wound distribution
+    const distribution = generateDistribution(numHits, adjustedWoundProb);
+    const stats = calculateStatistics(distribution);
+    
+    setWoundDistribution(distribution);
+    setWoundStatistics(stats);
+    setTotalWounds(parseFloat(stats.expectedValue));
+  }, [values.weaponStrength, values.toughness, values.woundModifier, values.rerollWounds, 
+      values.antiTarget, values.antiTargetThreshold, values.totalHits]);
 
   return (
     <ScrollView style={globalStyles.scrollView}>
@@ -168,11 +191,14 @@ const WoundPage = ({ values, onValueChange }) => {
         />
       )}
 
-      {/* Wound Probability Display */}
+      {/* Wound Results Display */}
       <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary }]}>
-        <Text style={[globalStyles.sectionTitle, { color: colors.text }]}>Wound Probability</Text>
-        <Text style={[globalStyles.mainResult, { color: colors.secondary, marginBottom: 0 }]}>
-          {woundChance}%
+        <Text style={[globalStyles.sectionTitle, { color: colors.text }]}>Wound Results</Text>
+        <Text style={[globalStyles.mainResult, { color: colors.secondary }]}>
+          {totalWounds.toFixed(1)} wounds
+        </Text>
+        <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginBottom: 8 }]}>
+          Wound Chance: {woundChance}%
         </Text>
         <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text }]}>
           S{values.weaponStrength} vs T{values.toughness}
@@ -182,7 +208,21 @@ const WoundPage = ({ values, onValueChange }) => {
             Critical wounds ignore saves
           </Text>
         )}
+        {values.precision && (
+          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginTop: 8 }]}>
+            Precision allows targeting of attached units
+          </Text>
+        )}
       </View>
+
+      {/* Probability Distribution */}
+      {woundDistribution && woundStatistics && (
+        <ProbabilityDistribution 
+          distribution={woundDistribution}
+          statistics={woundStatistics}
+          title="Wound Probability Distribution"
+        />
+      )}
     </ScrollView>
   );
 };

@@ -43,6 +43,8 @@ const Navigation = () => {
     woundModifier: '0',
     blast: false,
     blastMultiplier: 1,
+    // Calculated values
+    totalHits: 0,
     // Defender & Saves
     toughness: 4,
     armorSave: '3+',
