@@ -230,10 +230,13 @@ const HitPage = ({ values, onValueChange }) => {
       <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary }]}>
         <Text style={[globalStyles.sectionTitle, { color: colors.text }]}>Hit Results</Text>
         <Text style={[globalStyles.mainResult, { color: colors.secondary }]}>
-          {totalHits.toFixed(1)} hits
+          {hitStatistics ? hitStatistics.modes[0] : 0} hits
+        </Text>
+        <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginBottom: 4 }]}>
+          Most likely outcome ({hitStatistics ? hitStatistics.modePercentage : 0}% chance)
         </Text>
         <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginBottom: 8 }]}>
-          Hit Chance: {hitChance}%
+          Average: {totalHits.toFixed(1)} hits | Hit Chance: {hitChance}%
         </Text>
         {sustainedHitsCount > 0 && (
           <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, fontSize: 14 }]}>

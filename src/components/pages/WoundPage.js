@@ -195,10 +195,13 @@ const WoundPage = ({ values, onValueChange }) => {
       <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary }]}>
         <Text style={[globalStyles.sectionTitle, { color: colors.text }]}>Wound Results</Text>
         <Text style={[globalStyles.mainResult, { color: colors.secondary }]}>
-          {totalWounds.toFixed(1)} wounds
+          {woundStatistics ? woundStatistics.modes[0] : 0} wounds
+        </Text>
+        <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginBottom: 4 }]}>
+          Most likely outcome ({woundStatistics ? woundStatistics.modePercentage : 0}% chance)
         </Text>
         <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginBottom: 8 }]}>
-          Wound Chance: {woundChance}%
+          Average: {totalWounds.toFixed(1)} wounds | Wound Chance: {woundChance}%
         </Text>
         <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text }]}>
           S{values.weaponStrength} vs T{values.toughness}
