@@ -69,7 +69,6 @@ const HitPage = ({ values, onValueChange }) => {
   ];
 
   const additionalRules = [
-    { key: 'precision', label: 'Precision', type: 'toggle' },
     { key: 'hazardous', label: 'Hazardous', type: 'toggle' },
     { key: 'twinLinked', label: 'Twin-linked', type: 'toggle' },
   ];

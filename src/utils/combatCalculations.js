@@ -30,11 +30,11 @@ export const applyRerolls = (baseProb, rerollType) => {
   switch (rerollType) {
     case 'None':
       return baseProb;
-    case '1s':
+    case 'Re-roll 1s':
       return baseProb + (1/6 * baseProb); // Re-roll 1s only
-    case 'Failed':
+    case 'Re-roll All Failed':
       return baseProb + ((1 - baseProb) * baseProb); // Re-roll all failures
-    case 'All':
+    case 'Re-roll All':
       return 1 - (1 - baseProb) * (1 - baseProb); // Re-roll everything
     default:
       return baseProb;
@@ -57,19 +57,6 @@ export const getWoundProbability = (strength, toughness, modifiers = {}) => {
   if (modifiers.woundModifier) {
     const modifier = parseInt(modifiers.woundModifier);
     baseProb = Math.max(1/6, Math.min(5/6, baseProb + (modifier * 1/6)));
-  }
-  
-  // Anti-[Target] ability
-  if (modifiers.antiTarget && modifiers.antiTargetThreshold) {
-    const antiMap = { '2+': 5/6, '3+': 4/6, '4+': 3/6, '5+': 2/6, '6+': 1/6 };
-    const antiProb = antiMap[modifiers.antiTargetThreshold] || 0;
-    // Take the better of normal wound or anti-target
-    baseProb = Math.max(baseProb, antiProb);
-  }
-  
-  // Twin-linked gives re-roll wounds
-  if (modifiers.twinLinked) {
-    return applyRerolls(baseProb, 'Failed');
   }
   
   return baseProb;
@@ -116,39 +103,6 @@ export const getFailedSaveProbability = (armorSave, armorPiercing, modifiers = {
   return failProb;
 };
 
-// Calculate extra hits from abilities
-export const calculateExtraHits = (baseHits, modifiers = {}) => {
-  let totalHits = baseHits;
-  
-  // Sustained Hits
-  if (modifiers.sustainedHits && modifiers.sustainedHitsValue) {
-    const sixesToHit = baseHits / 6; // Unmodified 6s
-    const extraHits = sixesToHit * parseInt(modifiers.sustainedHitsValue);
-    totalHits += extraHits;
-  }
-  
-  return totalHits;
-};
-
-// Calculate mortal wounds
-export const calculateMortalWounds = (attacks, hitRate, woundRate, modifiers = {}) => {
-  let mortalWounds = 0;
-  
-  // Devastating Wounds - mortal wounds on unmodified 6s to wound
-  if (modifiers.devastatingWounds) {
-    const sixesToWound = attacks * hitRate * (1/6); // Unmodified 6s
-    mortalWounds += sixesToWound * (modifiers.damage || 1);
-  }
-  
-  // Hazardous - mortal wounds to self on unmodified 1s to hit
-  if (modifiers.hazardous) {
-    const onesToHit = attacks * (1/6); // Unmodified 1s
-    // Note: This would damage the attacker, not counted in wounds dealt
-  }
-  
-  return mortalWounds;
-};
-
 // Main calculation function with all modifiers
 export const calculateAverageWounds = (attackerProfile, defenderProfile, modifiers = {}) => {
   const {
@@ -184,26 +138,77 @@ export const calculateAverageWounds = (attackerProfile, defenderProfile, modifie
     hitRate = applyRerolls(hitRate, modifiers.rerollHits);
   }
   
-  // Calculate hits including extra hits
+  // Calculate expected hits
   const expectedHits = totalAttacks * hitRate;
-  const totalHits = calculateExtraHits(expectedHits, modifiers);
   
-  // Handle Lethal Hits (auto-wound on 6s to hit)
-  let autoWounds = 0;
-  if (modifiers.lethalHits) {
-    autoWounds = totalAttacks * (1/6); // Unmodified 6s to hit auto-wound
+  // Calculate natural 6s to hit for special abilities
+  const natural6sToHit = totalAttacks * (1/6);
+  
+  // Handle Sustained Hits - extra hits from natural 6s
+  let extraHitsFromSustained = 0;
+  if (modifiers.sustainedHits && modifiers.sustainedHitsValue) {
+    extraHitsFromSustained = natural6sToHit * parseInt(modifiers.sustainedHitsValue);
   }
   
-  // Get wound probability
+  // Handle Lethal Hits - natural 6s auto-wound
+  let lethalHitWounds = 0;
+  if (modifiers.lethalHits) {
+    // Lethal hits that rolled 6 also generate their sustained hits
+    lethalHitWounds = natural6sToHit;
+    if (modifiers.sustainedHits) {
+      lethalHitWounds += natural6sToHit * parseInt(modifiers.sustainedHitsValue || 1);
+    }
+  }
+  
+  // Total hits for wound rolls (excluding lethal hit auto-wounds)
+  const hitsToWound = expectedHits + extraHitsFromSustained - (modifiers.lethalHits ? natural6sToHit : 0);
+  
+  // Get base wound probability
   let woundRate = getWoundProbability(weaponStrength, toughness, modifiers);
   
-  // Apply wound re-rolls
-  if (modifiers.rerollWounds) {
-    woundRate = applyRerolls(woundRate, modifiers.rerollWounds);
+  // Calculate critical wounds from Anti-X
+  let criticalWoundsFromAnti = 0;
+  if (modifiers.antiTarget && modifiers.antiTargetThreshold) {
+    const antiMap = { '2+': 5/6, '3+': 4/6, '4+': 3/6, '5+': 2/6, '6+': 1/6 };
+    const antiThreshold = antiMap[modifiers.antiTargetThreshold] || 0;
+    // Anti-X creates critical wounds on unmodified rolls meeting threshold
+    criticalWoundsFromAnti = hitsToWound * antiThreshold;
   }
   
-  // Calculate normal wounds (not including auto-wounds)
-  const normalWounds = (totalHits - autoWounds) * woundRate + autoWounds;
+  // Apply wound re-rolls (including Twin-linked)
+  if (modifiers.rerollWounds || modifiers.twinLinked) {
+    // Twin-linked always allows wound re-rolls
+    const rerollType = modifiers.twinLinked ? 'Re-roll All Failed' : modifiers.rerollWounds;
+    woundRate = applyRerolls(woundRate, rerollType);
+  }
+  
+  // Calculate normal wounds
+  const normalWounds = hitsToWound * woundRate;
+  
+  // Calculate critical wounds (natural 6s to wound)
+  const natural6sToWound = hitsToWound * (1/6);
+  
+  // Calculate mortal wounds from Devastating Wounds
+  let mortalWounds = 0;
+  if (modifiers.devastatingWounds) {
+    // Both natural 6s to wound AND Anti-X critical wounds become mortal wounds
+    const totalCriticalWounds = natural6sToWound + criticalWoundsFromAnti;
+    mortalWounds = totalCriticalWounds * damage;
+    
+    // Mortal wounds still get Feel No Pain
+    if (defenderProfile.feelNoPain && defenderProfile.feelNoPain !== 'None') {
+      const fnp = parseInt(defenderProfile.feelNoPain.replace('+', ''));
+      const fnpSaveProb = (7 - fnp) / 6;
+      mortalWounds = mortalWounds * (1 - fnpSaveProb);
+    }
+  }
+  
+  // Total wounds that need saves (excluding mortal wounds from devastating)
+  let woundsNeedingSaves = normalWounds + lethalHitWounds;
+  if (modifiers.devastatingWounds) {
+    // Remove the critical wounds that became mortal wounds
+    woundsNeedingSaves -= (natural6sToWound + criticalWoundsFromAnti);
+  }
   
   // Get failed save rate
   const failedSaveRate = getFailedSaveProbability(armorSave, armorPiercing, {
@@ -213,10 +218,17 @@ export const calculateAverageWounds = (attackerProfile, defenderProfile, modifie
   });
   
   // Calculate final damage
-  const normalDamage = normalWounds * failedSaveRate * damage;
-  const mortalWounds = calculateMortalWounds(totalAttacks, hitRate, woundRate, { ...modifiers, damage });
+  const normalDamage = woundsNeedingSaves * failedSaveRate * damage;
   
   const averageWounds = normalDamage + mortalWounds;
+  
+  // Hazardous damage to self (informational only)
+  let hazardousDamage = 0;
+  if (modifiers.hazardous) {
+    // After all attacks resolved, roll D6 per model that attacked
+    // On a 1, suffer 3 mortal wounds
+    hazardousDamage = models * (1/6) * 3;
+  }
   
   return {
     averageWounds: averageWounds.toFixed(2),
@@ -226,9 +238,12 @@ export const calculateAverageWounds = (attackerProfile, defenderProfile, modifie
     failedSaveRate: (failedSaveRate * 100).toFixed(1),
     mortalWounds: mortalWounds.toFixed(2),
     details: {
-      totalHits: totalHits.toFixed(1),
-      autoWounds: autoWounds.toFixed(1),
-      normalWounds: normalWounds.toFixed(1),
+      totalHits: (expectedHits + extraHitsFromSustained).toFixed(1),
+      sustainedHits: extraHitsFromSustained.toFixed(1),
+      lethalHitWounds: lethalHitWounds.toFixed(2),
+      criticalWounds: (natural6sToWound + criticalWoundsFromAnti).toFixed(2),
+      antiXCriticals: criticalWoundsFromAnti.toFixed(2),
+      hazardousDamage: hazardousDamage.toFixed(2),
     }
   };
 };

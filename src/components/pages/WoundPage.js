@@ -66,6 +66,7 @@ const WoundPage = ({ values, onValueChange }) => {
   const specialRules = [
     { key: 'antiTarget', label: 'Anti-X', type: 'toggle' },
     { key: 'devastatingWounds', label: 'Devastating Wounds', type: 'toggle' },
+    { key: 'precision', label: 'Precision', type: 'toggle' },
   ];
 
   const conditionalInputs = [];

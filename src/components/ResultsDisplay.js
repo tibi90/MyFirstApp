@@ -48,10 +48,24 @@ const ResultsDisplay = ({ results }) => {
         <Text style={globalStyles.resultValue}>{results.woundRate}%</Text>
       </View>
 
-      {results.details && results.details.autoWounds && parseFloat(results.details.autoWounds) > 0 && (
+      {results.details && results.details.lethalHitWounds && parseFloat(results.details.lethalHitWounds) > 0 && (
         <View style={globalStyles.resultRow}>
           <Text style={globalStyles.resultLabel}>Auto-wounds (Lethal Hits):</Text>
-          <Text style={globalStyles.resultValue}>{results.details.autoWounds}</Text>
+          <Text style={globalStyles.resultValue}>{results.details.lethalHitWounds}</Text>
+        </View>
+      )}
+
+      {results.details && results.details.sustainedHits && parseFloat(results.details.sustainedHits) > 0 && (
+        <View style={globalStyles.resultRow}>
+          <Text style={globalStyles.resultLabel}>Extra Hits (Sustained):</Text>
+          <Text style={globalStyles.resultValue}>{results.details.sustainedHits}</Text>
+        </View>
+      )}
+
+      {results.details && results.details.criticalWounds && parseFloat(results.details.criticalWounds) > 0 && (
+        <View style={globalStyles.resultRow}>
+          <Text style={globalStyles.resultLabel}>Critical Wounds:</Text>
+          <Text style={globalStyles.resultValue}>{results.details.criticalWounds}</Text>
         </View>
       )}
 
@@ -59,6 +73,13 @@ const ResultsDisplay = ({ results }) => {
         <Text style={globalStyles.resultLabel}>Failed Save Chance:</Text>
         <Text style={globalStyles.resultValue}>{results.failedSaveRate}%</Text>
       </View>
+
+      {results.details && results.details.hazardousDamage && parseFloat(results.details.hazardousDamage) > 0 && (
+        <View style={[globalStyles.resultRow, { backgroundColor: 'rgba(204, 0, 0, 0.1)', padding: 8, marginTop: 10 }]}>
+          <Text style={[globalStyles.resultLabel, { color: '#cc0000' }]}>Hazardous (self damage):</Text>
+          <Text style={[globalStyles.resultValue, { color: '#cc0000' }]}>{results.details.hazardousDamage}</Text>
+        </View>
+      )}
     </View>
   );
 };
