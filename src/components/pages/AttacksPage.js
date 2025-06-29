@@ -14,11 +14,13 @@ const AttacksPage = ({ values, onValueChange }) => {
   const [diceCount, setDiceCount] = useState('0');
   const [fixedBonus, setFixedBonus] = useState('0');
   const [averageAttacks, setAverageAttacks] = useState(null);
+  const [isUsingDice, setIsUsingDice] = useState(false);
 
   // Calculate average attacks when dice values change
   useEffect(() => {
     if (diceCount === '0' && fixedBonus === '0') {
       // Use manual input
+      setIsUsingDice(false);
       return;
     }
     
@@ -30,6 +32,7 @@ const AttacksPage = ({ values, onValueChange }) => {
       const average = (dice * 3.5) + bonus;
       setAverageAttacks(average);
       onValueChange('attacksPerModel', average);
+      setIsUsingDice(true);
     }
   }, [diceCount, fixedBonus]);
 
@@ -70,7 +73,13 @@ const AttacksPage = ({ values, onValueChange }) => {
         </View>
 
         {/* Dice Options */}
-        <View style={[globalStyles.inputRow, { backgroundColor: colors.background, padding: 12, borderRadius: 8 }]}>
+        <View style={[globalStyles.inputRow, { 
+          backgroundColor: isUsingDice ? colors.primary : colors.background, 
+          padding: 12, 
+          borderRadius: 8,
+          borderWidth: isUsingDice ? 2 : 0,
+          borderColor: colors.secondary 
+        }]}>
           <Text style={[globalStyles.label, { marginBottom: 12 }]}>Average Attacks (D6)</Text>
           
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
@@ -79,7 +88,12 @@ const AttacksPage = ({ values, onValueChange }) => {
               <View style={globalStyles.picker}>
                 <Picker
                   selectedValue={diceCount}
-                  onValueChange={setDiceCount}
+                  onValueChange={(value) => {
+                    setDiceCount(value);
+                    if (value !== '0' || fixedBonus !== '0') {
+                      setIsUsingDice(true);
+                    }
+                  }}
                   style={{ color: colors.text }}
                   dropdownIconColor={colors.text}
                 >
@@ -101,7 +115,12 @@ const AttacksPage = ({ values, onValueChange }) => {
               <TextInput
                 style={globalStyles.input}
                 value={fixedBonus}
-                onChangeText={setFixedBonus}
+                onChangeText={(text) => {
+                  setFixedBonus(text);
+                  if (text !== '0' || diceCount !== '0') {
+                    setIsUsingDice(true);
+                  }
+                }}
                 keyboardType="numeric"
                 placeholder="0"
               />
@@ -130,16 +149,18 @@ const AttacksPage = ({ values, onValueChange }) => {
         <View style={globalStyles.inputRow}>
           <Text style={globalStyles.label}>Fixed Attacks per Model</Text>
           <TextInput
-            style={globalStyles.input}
-            value={String(values.attacksPerModel)}
+            style={[globalStyles.input, isUsingDice && { backgroundColor: colors.surface, opacity: 0.5 }]}
+            value={isUsingDice ? '' : String(values.attacksPerModel)}
             onChangeText={(text) => {
               setDiceCount('0');
               setFixedBonus('0');
               setAverageAttacks(null);
+              setIsUsingDice(false);
               onValueChange('attacksPerModel', parseFloat(text) || 0);
             }}
             keyboardType="decimal-pad"
-            placeholder="1"
+            placeholder={isUsingDice ? 'Using D6 above' : '1'}
+            editable={!isUsingDice}
           />
         </View>
       </View>
