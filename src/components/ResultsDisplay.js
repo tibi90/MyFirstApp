@@ -33,7 +33,7 @@ const ResultsDisplay = ({ results }) => {
 
       <View style={globalStyles.resultRow}>
         <Text style={globalStyles.resultLabel}>Hit Chance:</Text>
-        <Text style={globalStyles.resultValue}>{results.hitRate}%</Text>
+        <Text style={globalStyles.resultValue}>{results.hitRate}% ({results.details?.totalHits || '0'} hits)</Text>
       </View>
 
       {results.details && results.details.totalHits && (

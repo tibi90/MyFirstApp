@@ -49,7 +49,6 @@ const ResultsPage = ({ values, onValueChange, onNavigate }) => {
       devastatingWounds: values.devastatingWounds,
       twinLinked: values.twinLinked,
       blast: values.blast,
-      blastMultiplier: values.blastMultiplier,
       woundModifier: values.woundModifier,
       // Save modifiers
       cover: values.cover,
@@ -80,7 +79,6 @@ const ResultsPage = ({ values, onValueChange, onNavigate }) => {
       twinLinked: false,
       torrent: false,
       blast: false,
-      blastMultiplier: 1,
       hazardous: false,
       criticalOn5Plus: false,
       toughness: 4,

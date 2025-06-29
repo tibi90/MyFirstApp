@@ -44,6 +44,7 @@ const HitPage = ({ values, onValueChange }) => {
         { label: 'Re-roll 1s', value: 'Re-roll 1s' },
         { label: 'Re-roll All Failed', value: 'Re-roll All Failed' },
         { label: 'Re-roll All', value: 'Re-roll All' },
+        { label: 'Re-roll Non-criticals', value: 'Re-roll Non-criticals' },
       ],
     },
   ];

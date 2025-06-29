@@ -26,7 +26,7 @@ export const getHitProbability = (skill, modifiers = {}) => {
 };
 
 // Calculate re-roll probability
-export const applyRerolls = (baseProb, rerollType) => {
+export const applyRerolls = (baseProb, rerollType, criticalThreshold = 1/6) => {
   switch (rerollType) {
     case 'None':
       return baseProb;
@@ -36,6 +36,11 @@ export const applyRerolls = (baseProb, rerollType) => {
       return baseProb + ((1 - baseProb) * baseProb); // Re-roll all failures
     case 'Re-roll All':
       return 1 - (1 - baseProb) * (1 - baseProb); // Re-roll everything
+    case 'Re-roll Non-criticals':
+      // Re-roll everything except criticals (5+ or 6s depending on setting)
+      const nonCriticalRate = 1 - criticalThreshold;
+      const rerollableProb = Math.min(baseProb, nonCriticalRate);
+      return baseProb + (rerollableProb * baseProb);
     default:
       return baseProb;
   }
@@ -125,9 +130,14 @@ export const calculateAverageWounds = (attackerProfile, defenderProfile, modifie
   
   // Apply Blast if applicable - adds 1 attack per 5 enemy models
   if (modifiers.blast && unitSize) {
-    const blastMultiplier = parseInt(modifiers.blastMultiplier) || 1;
-    const blastBonus = Math.floor(unitSize / 5) * blastMultiplier;
+    const blastBonus = Math.floor(unitSize / 5);
     totalAttacks += blastBonus;
+  }
+  
+  // Calculate critical hits (natural 6s, or 5+ if special rule active)
+  let criticalHitRate = 1/6; // Default: only 6s
+  if (modifiers.criticalOn5Plus) {
+    criticalHitRate = 2/6; // Both 5s and 6s
   }
   
   // Get hit probability
@@ -135,17 +145,11 @@ export const calculateAverageWounds = (attackerProfile, defenderProfile, modifie
   
   // Apply hit re-rolls
   if (modifiers.rerollHits) {
-    hitRate = applyRerolls(hitRate, modifiers.rerollHits);
+    hitRate = applyRerolls(hitRate, modifiers.rerollHits, criticalHitRate);
   }
   
   // Calculate expected hits
   const expectedHits = totalAttacks * hitRate;
-  
-  // Calculate critical hits (natural 6s, or 5+ if special rule active)
-  let criticalHitRate = 1/6; // Default: only 6s
-  if (modifiers.criticalOn5Plus) {
-    criticalHitRate = 2/6; // Both 5s and 6s
-  }
   const criticalHits = totalAttacks * criticalHitRate;
   
   // Handle Sustained Hits - extra hits from critical hits

@@ -168,21 +168,9 @@ const AttacksPage = ({ values, onValueChange }) => {
         </View>
         
         {values.blast && (
-          <>
-            <View style={globalStyles.inputRow}>
-              <Text style={globalStyles.label}>Blast Hits per 5 Models</Text>
-              <TextInput
-                style={globalStyles.input}
-                value={String(values.blastMultiplier || 1)}
-                onChangeText={(text) => onValueChange('blastMultiplier', parseInt(text) || 1)}
-                keyboardType="numeric"
-                placeholder="1"
-              />
-            </View>
-            <Text style={[globalStyles.label, { fontSize: 12, color: colors.textSecondary, marginTop: 8, paddingHorizontal: 16 }]}>
-              Blast adds {values.blastMultiplier || 1} attack per 5 enemy models
-            </Text>
-          </>
+          <Text style={[globalStyles.label, { fontSize: 12, color: colors.textSecondary, marginTop: 8, paddingHorizontal: 16 }]}>
+            Blast adds +1 attack per 5 enemy models
+          </Text>
         )}
       </View>
     </ScrollView>
