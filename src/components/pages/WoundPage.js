@@ -14,7 +14,7 @@ const WoundPage = ({ values, onValueChange }) => {
     {
       key: 'weaponStrength',
       label: 'Weapon Strength',
-      type: 'number',
+      type: 'numeric',
     },
     {
       key: 'armorPiercing',
@@ -30,11 +30,11 @@ const WoundPage = ({ values, onValueChange }) => {
         { label: '-6', value: '-6' },
       ],
     },
-    { key: 'damage', label: 'Damage', type: 'number' },
+    { key: 'damage', label: 'Damage', type: 'numeric' },
   ];
 
   const targetInputs = [
-    { key: 'toughness', label: 'Target Toughness', type: 'number' },
+    { key: 'toughness', label: 'Target Toughness', type: 'numeric' },
   ];
 
   const woundModifiers = [
