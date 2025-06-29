@@ -14,6 +14,7 @@ const SavePage = ({ values, onValueChange }) => {
   const [totalSurvival, setTotalSurvival] = useState(0);
 
   const saveInputs = [
+    { key: 'unitSize', label: 'Target Unit Size', type: 'number' },
     {
       key: 'armorSave',
       label: 'Armor Save',

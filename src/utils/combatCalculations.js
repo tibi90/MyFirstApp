@@ -169,11 +169,11 @@ export const calculateAverageWounds = (attackerProfile, defenderProfile, modifie
   // Calculate base attacks
   let totalAttacks = models * attacksPerModel;
   
-  // Apply Blast if applicable
+  // Apply Blast if applicable - adds 1 attack per 5 enemy models
   if (modifiers.blast && unitSize) {
     const blastMultiplier = parseInt(modifiers.blastMultiplier) || 1;
-    if (unitSize >= 6) totalAttacks += blastMultiplier;
-    if (unitSize >= 11) totalAttacks += blastMultiplier;
+    const blastBonus = Math.floor(unitSize / 5) * blastMultiplier;
+    totalAttacks += blastBonus;
   }
   
   // Get hit probability

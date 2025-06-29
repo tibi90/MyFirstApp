@@ -35,7 +35,6 @@ const WoundPage = ({ values, onValueChange }) => {
 
   const targetInputs = [
     { key: 'toughness', label: 'Target Toughness', type: 'number' },
-    { key: 'unitSize', label: 'Target Unit Size', type: 'number' },
   ];
 
   const woundModifiers = [

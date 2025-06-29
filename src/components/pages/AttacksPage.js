@@ -13,9 +13,9 @@ import { globalStyles, colors } from '../../styles/styles';
 const AttacksPage = ({ values, onValueChange }) => {
   const [diceCount, setDiceCount] = useState('0');
   const [fixedBonus, setFixedBonus] = useState('0');
-  const [rolledAttacks, setRolledAttacks] = useState(null);
+  const [averageAttacks, setAverageAttacks] = useState(null);
 
-  // Calculate total attacks when dice values change
+  // Calculate average attacks when dice values change
   useEffect(() => {
     if (diceCount === '0' && fixedBonus === '0') {
       // Use manual input
@@ -25,30 +25,23 @@ const AttacksPage = ({ values, onValueChange }) => {
     const dice = parseInt(diceCount) || 0;
     const bonus = parseInt(fixedBonus) || 0;
     
-    if (dice > 0) {
-      // Roll the dice
-      let total = bonus;
-      for (let i = 0; i < dice; i++) {
-        total += Math.floor(Math.random() * 6) + 1;
-      }
-      setRolledAttacks(total);
-      onValueChange('attacksPerModel', total);
-    } else if (bonus > 0) {
-      onValueChange('attacksPerModel', bonus);
+    if (dice > 0 || bonus > 0) {
+      // Calculate average: each D6 averages to 3.5
+      const average = (dice * 3.5) + bonus;
+      setAverageAttacks(average);
+      onValueChange('attacksPerModel', average);
     }
   }, [diceCount, fixedBonus]);
 
-  const rollDice = () => {
+  const calculateAverage = () => {
     const dice = parseInt(diceCount) || 0;
     const bonus = parseInt(fixedBonus) || 0;
     
-    if (dice > 0) {
-      let total = bonus;
-      for (let i = 0; i < dice; i++) {
-        total += Math.floor(Math.random() * 6) + 1;
-      }
-      setRolledAttacks(total);
-      onValueChange('attacksPerModel', total);
+    if (dice > 0 || bonus > 0) {
+      // Calculate average: each D6 averages to 3.5
+      const average = (dice * 3.5) + bonus;
+      setAverageAttacks(average);
+      onValueChange('attacksPerModel', average);
     }
   };
 
@@ -78,7 +71,7 @@ const AttacksPage = ({ values, onValueChange }) => {
 
         {/* Dice Options */}
         <View style={[globalStyles.inputRow, { backgroundColor: colors.background, padding: 12, borderRadius: 8 }]}>
-          <Text style={[globalStyles.label, { marginBottom: 12 }]}>Random Attacks (D6)</Text>
+          <Text style={[globalStyles.label, { marginBottom: 12 }]}>Average Attacks (D6)</Text>
           
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
             <View style={{ flex: 1, marginRight: 8 }}>
@@ -115,16 +108,17 @@ const AttacksPage = ({ values, onValueChange }) => {
             </View>
           </View>
 
-          {diceCount !== '0' && (
-            <TouchableOpacity style={[globalStyles.button, { backgroundColor: colors.secondary }]} onPress={rollDice}>
-              <Text style={[globalStyles.buttonText, { color: colors.background }]}>Roll Dice</Text>
-            </TouchableOpacity>
-          )}
-
-          {rolledAttacks !== null && diceCount !== '0' && (
-            <Text style={{ color: colors.secondary, textAlign: 'center', marginTop: 12, fontSize: 16 }}>
-              Rolled: {rolledAttacks} attacks per model
-            </Text>
+          {(diceCount !== '0' || fixedBonus !== '0') && (
+            <View style={{ marginTop: 12 }}>
+              <Text style={{ color: colors.secondary, textAlign: 'center', fontSize: 16 }}>
+                Average: {averageAttacks !== null ? averageAttacks.toFixed(1) : '0'} attacks per model
+              </Text>
+              {diceCount !== '0' && (
+                <Text style={{ color: colors.textSecondary, textAlign: 'center', marginTop: 4, fontSize: 14 }}>
+                  ({diceCount}D6{fixedBonus !== '0' ? ` + ${fixedBonus}` : ''})
+                </Text>
+              )}
+            </View>
           )}
         </View>
 
@@ -141,10 +135,10 @@ const AttacksPage = ({ values, onValueChange }) => {
             onChangeText={(text) => {
               setDiceCount('0');
               setFixedBonus('0');
-              setRolledAttacks(null);
-              onValueChange('attacksPerModel', parseInt(text) || 0);
+              setAverageAttacks(null);
+              onValueChange('attacksPerModel', parseFloat(text) || 0);
             }}
-            keyboardType="numeric"
+            keyboardType="decimal-pad"
             placeholder="1"
           />
         </View>
@@ -174,16 +168,21 @@ const AttacksPage = ({ values, onValueChange }) => {
         </View>
         
         {values.blast && (
-          <View style={globalStyles.inputRow}>
-            <Text style={globalStyles.label}>Blast Hits per 5 Models</Text>
-            <TextInput
-              style={globalStyles.input}
-              value={String(values.blastMultiplier || 1)}
-              onChangeText={(text) => onValueChange('blastMultiplier', parseInt(text) || 1)}
-              keyboardType="numeric"
-              placeholder="1"
-            />
-          </View>
+          <>
+            <View style={globalStyles.inputRow}>
+              <Text style={globalStyles.label}>Blast Hits per 5 Models</Text>
+              <TextInput
+                style={globalStyles.input}
+                value={String(values.blastMultiplier || 1)}
+                onChangeText={(text) => onValueChange('blastMultiplier', parseInt(text) || 1)}
+                keyboardType="numeric"
+                placeholder="1"
+              />
+            </View>
+            <Text style={[globalStyles.label, { fontSize: 12, color: colors.textSecondary, marginTop: 8, paddingHorizontal: 16 }]}>
+              Blast adds {values.blastMultiplier || 1} attack per 5 enemy models
+            </Text>
+          </>
         )}
       </View>
     </ScrollView>
