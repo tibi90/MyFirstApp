@@ -5,10 +5,20 @@ import {
   Text,
 } from 'react-native';
 import InputSection from '../InputSection';
+import ProbabilityDistribution from '../ProbabilityDistribution';
 import { globalStyles, colors } from '../../styles/styles';
+import { 
+  generateDistribution, 
+  calculateStatistics,
+  adjustProbabilityForRerolls 
+} from '../../utils/probabilityCalculations';
 
 const HitPage = ({ values, onValueChange }) => {
   const [hitChance, setHitChance] = useState(0);
+  const [totalHits, setTotalHits] = useState(0);
+  const [sustainedHitsCount, setSustainedHitsCount] = useState(0);
+  const [hitDistribution, setHitDistribution] = useState(null);
+  const [hitStatistics, setHitStatistics] = useState(null);
 
   const hitInputs = [
     {
@@ -75,10 +85,55 @@ const HitPage = ({ values, onValueChange }) => {
     { key: 'twinLinked', label: 'Twin-linked', type: 'toggle' },
   ];
 
-  // Calculate hit chance
+  // Calculate hit chance and total hits
   useEffect(() => {
+    // Calculate total attacks including blast
+    const totalAttacks = values.models * values.attacksPerModel + 
+      (values.blast && values.unitSize ? Math.floor(values.unitSize / 5) : 0);
+    
+    if (!totalAttacks || totalAttacks === 0) {
+      setHitDistribution(null);
+      setHitStatistics(null);
+      return;
+    }
+    
     if (values.torrent) {
       setHitChance(100);
+      setTotalHits(totalAttacks);
+      
+      // For torrent, all attacks hit
+      if (values.sustainedHits) {
+        const critRate = values.criticalOn5Plus ? 2/6 : 1/6;
+        const sustainedValue = parseInt(values.sustainedHitsValue) || 1;
+        
+        // Generate distribution for torrent with sustained hits
+        const distribution = generateDistribution(totalAttacks, 1, {
+          sustainedHits: 1,
+          sustainedHitsValue: sustainedValue,
+          criticalRate: critRate
+        });
+        
+        const stats = calculateStatistics(distribution);
+        setHitDistribution(distribution);
+        setHitStatistics(stats);
+        setTotalHits(parseFloat(stats.expectedValue));
+        setSustainedHitsCount(totalAttacks * critRate * sustainedValue);
+      } else {
+        // Simple torrent - all attacks hit
+        const distribution = [{
+          hits: totalAttacks,
+          probability: 1,
+          percentage: "100.00",
+          cumulativeLessEqual: "100.0",
+          cumulativeGreaterEqual: "100.0"
+        }];
+        setHitDistribution(distribution);
+        setHitStatistics({
+          expectedValue: totalAttacks.toFixed(1),
+          modes: [totalAttacks],
+          modePercentage: "100.0"
+        });
+      }
       return;
     }
 
@@ -88,22 +143,49 @@ const HitPage = ({ values, onValueChange }) => {
     
     let baseChance = (7 - modifiedWS) / 6;
     
-    // Apply re-rolls
-    if (values.rerollHits === 'Re-roll 1s') {
-      baseChance += (1/6) * baseChance;
-    } else if (values.rerollHits === 'Re-roll All Failed') {
-      baseChance += (1 - baseChance) * baseChance;
-    } else if (values.rerollHits === 'Re-roll All') {
-      baseChance = 1 - (1 - baseChance) * (1 - baseChance);
+    // Critical hit rate
+    const critRate = values.criticalOn5Plus ? 2/6 : 1/6;
+    
+    // Apply re-rolls with proper handling
+    const rerollType = values.rerollHits || 'None';
+    const adjustedHitProb = adjustProbabilityForRerolls(baseChance, rerollType, critRate);
+    
+    // Twin-linked gives re-roll if no other re-roll active
+    let finalHitProb = adjustedHitProb;
+    if (values.twinLinked && rerollType === 'None') {
+      finalHitProb = adjustProbabilityForRerolls(baseChance, 'Re-roll All Failed', critRate);
     }
     
-    // Twin-linked gives re-roll
-    if (values.twinLinked && values.rerollHits === 'None') {
-      baseChance += (1 - baseChance) * baseChance;
+    setHitChance(Math.round(finalHitProb * 100));
+    
+    // Generate distribution
+    let distribution;
+    if (values.sustainedHits) {
+      const sustainedValue = parseInt(values.sustainedHitsValue) || 1;
+      distribution = generateDistribution(totalAttacks, finalHitProb, {
+        sustainedHits: 1,
+        sustainedHitsValue: sustainedValue,
+        criticalRate: critRate
+      });
+    } else {
+      distribution = generateDistribution(totalAttacks, finalHitProb);
     }
     
-    setHitChance(Math.round(baseChance * 100));
-  }, [values.weaponSkill, values.hitModifier, values.rerollHits, values.torrent, values.twinLinked]);
+    const stats = calculateStatistics(distribution);
+    setHitDistribution(distribution);
+    setHitStatistics(stats);
+    setTotalHits(parseFloat(stats.expectedValue));
+    
+    // Calculate sustained hits separately for display
+    if (values.sustainedHits) {
+      const sustainedValue = parseInt(values.sustainedHitsValue) || 1;
+      setSustainedHitsCount(totalAttacks * critRate * sustainedValue);
+    } else {
+      setSustainedHitsCount(0);
+    }
+  }, [values.weaponSkill, values.hitModifier, values.rerollHits, values.torrent, values.twinLinked,
+      values.models, values.attacksPerModel, values.blast, values.unitSize, 
+      values.sustainedHits, values.sustainedHitsValue, values.criticalOn5Plus]);
 
   return (
     <ScrollView style={globalStyles.scrollView}>
@@ -139,10 +221,18 @@ const HitPage = ({ values, onValueChange }) => {
 
       {/* Hit Probability Display */}
       <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary }]}>
-        <Text style={[globalStyles.sectionTitle, { color: colors.text }]}>Hit Probability</Text>
-        <Text style={[globalStyles.mainResult, { color: colors.secondary, marginBottom: 0 }]}>
-          {hitChance}%
+        <Text style={[globalStyles.sectionTitle, { color: colors.text }]}>Hit Results</Text>
+        <Text style={[globalStyles.mainResult, { color: colors.secondary }]}>
+          {totalHits.toFixed(1)} hits
         </Text>
+        <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginBottom: 8 }]}>
+          Hit Chance: {hitChance}%
+        </Text>
+        {sustainedHitsCount > 0 && (
+          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, fontSize: 14 }]}>
+            Including {sustainedHitsCount.toFixed(1)} sustained hits
+          </Text>
+        )}
         {values.torrent && (
           <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text }]}>
             Torrent weapons automatically hit
@@ -164,6 +254,15 @@ const HitPage = ({ values, onValueChange }) => {
           </Text>
         )}
       </View>
+
+      {/* Probability Distribution */}
+      {hitDistribution && hitStatistics && (
+        <ProbabilityDistribution 
+          distribution={hitDistribution}
+          statistics={hitStatistics}
+          title="Hit Probability Distribution"
+        />
+      )}
     </ScrollView>
   );
 };

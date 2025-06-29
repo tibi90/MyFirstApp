@@ -19,6 +19,27 @@ const ResultsDisplay = ({ results }) => {
         Average Wounds Dealt
       </Text>
 
+      {/* Confidence Intervals */}
+      {results.confidence && (
+        <View style={[globalStyles.section, { marginBottom: 16, backgroundColor: 'rgba(255, 255, 255, 0.05)' }]}>
+          <Text style={[globalStyles.sectionTitle, { fontSize: 14, marginBottom: 8 }]}>Confidence Intervals</Text>
+          
+          <View style={globalStyles.resultRow}>
+            <Text style={globalStyles.resultLabel}>68% Confidence:</Text>
+            <Text style={globalStyles.resultValue}>
+              {results.confidence.interval68.lower}-{results.confidence.interval68.upper} wounds
+            </Text>
+          </View>
+          
+          <View style={[globalStyles.resultRow, { borderBottomWidth: 0 }]}>
+            <Text style={globalStyles.resultLabel}>95% Confidence:</Text>
+            <Text style={globalStyles.resultValue}>
+              {results.confidence.interval95.lower}-{results.confidence.interval95.upper} wounds
+            </Text>
+          </View>
+        </View>
+      )}
+
       {results.mortalWounds && parseFloat(results.mortalWounds) > 0 && (
         <View style={[globalStyles.resultRow, { backgroundColor: 'rgba(204, 0, 0, 0.2)', padding: 8, marginBottom: 10 }]}>
           <Text style={globalStyles.resultLabel}>Mortal Wounds Included:</Text>

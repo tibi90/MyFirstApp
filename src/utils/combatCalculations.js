@@ -243,6 +243,13 @@ export const calculateAverageWounds = (attackerProfile, defenderProfile, modifie
     hazardousDamage = models * (1/6) * 3;
   }
   
+  // Calculate confidence intervals for final damage
+  const damageStdDev = Math.sqrt(averageWounds * 0.25); // Simplified approximation
+  const confidence68Lower = Math.max(0, averageWounds - damageStdDev);
+  const confidence68Upper = averageWounds + damageStdDev;
+  const confidence95Lower = Math.max(0, averageWounds - (2 * damageStdDev));
+  const confidence95Upper = averageWounds + (2 * damageStdDev);
+
   return {
     averageWounds: averageWounds.toFixed(2),
     totalAttacks,
@@ -260,6 +267,16 @@ export const calculateAverageWounds = (attackerProfile, defenderProfile, modifie
       successfulHits: successfulHits.toFixed(1),
       successfulWounds: totalWoundsInflicted.toFixed(1),
       failedSaves: failedSaves.toFixed(1),
+    },
+    confidence: {
+      interval68: {
+        lower: confidence68Lower.toFixed(1),
+        upper: confidence68Upper.toFixed(1)
+      },
+      interval95: {
+        lower: confidence95Lower.toFixed(1),
+        upper: confidence95Upper.toFixed(1)
+      }
     }
   };
 };
