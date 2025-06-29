@@ -141,27 +141,31 @@ export const calculateAverageWounds = (attackerProfile, defenderProfile, modifie
   // Calculate expected hits
   const expectedHits = totalAttacks * hitRate;
   
-  // Calculate natural 6s to hit for special abilities
-  const natural6sToHit = totalAttacks * (1/6);
+  // Calculate critical hits (natural 6s, or 5+ if special rule active)
+  let criticalHitRate = 1/6; // Default: only 6s
+  if (modifiers.criticalOn5Plus) {
+    criticalHitRate = 2/6; // Both 5s and 6s
+  }
+  const criticalHits = totalAttacks * criticalHitRate;
   
-  // Handle Sustained Hits - extra hits from natural 6s
+  // Handle Sustained Hits - extra hits from critical hits
   let extraHitsFromSustained = 0;
   if (modifiers.sustainedHits && modifiers.sustainedHitsValue) {
-    extraHitsFromSustained = natural6sToHit * parseInt(modifiers.sustainedHitsValue);
+    extraHitsFromSustained = criticalHits * parseInt(modifiers.sustainedHitsValue);
   }
   
-  // Handle Lethal Hits - natural 6s auto-wound
+  // Handle Lethal Hits - critical hits auto-wound
   let lethalHitWounds = 0;
   if (modifiers.lethalHits) {
-    // Lethal hits that rolled 6 also generate their sustained hits
-    lethalHitWounds = natural6sToHit;
+    // Lethal hits that are critical also generate their sustained hits
+    lethalHitWounds = criticalHits;
     if (modifiers.sustainedHits) {
-      lethalHitWounds += natural6sToHit * parseInt(modifiers.sustainedHitsValue || 1);
+      lethalHitWounds += criticalHits * parseInt(modifiers.sustainedHitsValue || 1);
     }
   }
   
-  // Total hits for wound rolls (excluding lethal hit auto-wounds)
-  const hitsToWound = expectedHits + extraHitsFromSustained - (modifiers.lethalHits ? natural6sToHit : 0);
+  // Total hits for wound rolls (excluding lethal hit auto-wounds from criticals)
+  const hitsToWound = expectedHits + extraHitsFromSustained - (modifiers.lethalHits ? criticalHits : 0);
   
   // Get base wound probability
   let woundRate = getWoundProbability(weaponStrength, toughness, modifiers);
@@ -217,8 +221,13 @@ export const calculateAverageWounds = (attackerProfile, defenderProfile, modifie
     feelNoPain: defenderProfile.feelNoPain,
   });
   
+  // Calculate key statistics
+  const successfulHits = expectedHits + extraHitsFromSustained;
+  const totalWoundsInflicted = normalWounds + lethalHitWounds;
+  const failedSaves = woundsNeedingSaves * failedSaveRate;
+  
   // Calculate final damage
-  const normalDamage = woundsNeedingSaves * failedSaveRate * damage;
+  const normalDamage = failedSaves * damage;
   
   const averageWounds = normalDamage + mortalWounds;
   
@@ -244,6 +253,9 @@ export const calculateAverageWounds = (attackerProfile, defenderProfile, modifie
       criticalWounds: (natural6sToWound + criticalWoundsFromAnti).toFixed(2),
       antiXCriticals: criticalWoundsFromAnti.toFixed(2),
       hazardousDamage: hazardousDamage.toFixed(2),
+      successfulHits: successfulHits.toFixed(1),
+      successfulWounds: totalWoundsInflicted.toFixed(1),
+      failedSaves: failedSaves.toFixed(1),
     }
   };
 };

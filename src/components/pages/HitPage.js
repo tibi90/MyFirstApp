@@ -52,6 +52,7 @@ const HitPage = ({ values, onValueChange }) => {
     { key: 'torrent', label: 'Torrent (Auto-hit)', type: 'toggle' },
     { key: 'lethalHits', label: 'Lethal Hits', type: 'toggle' },
     { key: 'sustainedHits', label: 'Sustained Hits', type: 'toggle' },
+    { key: 'criticalOn5Plus', label: 'Critical Hits on 5+', type: 'toggle' },
   ];
 
   const sustainedOptions = [
@@ -154,6 +155,11 @@ const HitPage = ({ values, onValueChange }) => {
         {values.sustainedHits && (
           <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginTop: 8 }]}>
             Critical hits score {values.sustainedHitsValue} extra hits
+          </Text>
+        )}
+        {values.criticalOn5Plus && (
+          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginTop: 8 }]}>
+            Natural 5s and 6s count as critical hits
           </Text>
         )}
       </View>

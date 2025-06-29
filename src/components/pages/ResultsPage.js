@@ -41,6 +41,7 @@ const ResultsPage = ({ values, onValueChange, onNavigate }) => {
       torrent: values.torrent,
       hazardous: values.hazardous,
       hitModifier: values.hitModifier,
+      criticalOn5Plus: values.criticalOn5Plus,
       // Wound modifiers
       rerollWounds: values.rerollWounds,
       antiTarget: values.antiTarget,
@@ -81,6 +82,7 @@ const ResultsPage = ({ values, onValueChange, onNavigate }) => {
       blast: false,
       blastMultiplier: 1,
       hazardous: false,
+      criticalOn5Plus: false,
       toughness: 4,
       armorSave: '3+',
       invulnSave: 'None',

@@ -74,6 +74,26 @@ const ResultsDisplay = ({ results }) => {
         <Text style={globalStyles.resultValue}>{results.failedSaveRate}%</Text>
       </View>
 
+      {/* Summary Statistics */}
+      <View style={[globalStyles.section, { marginTop: 16, backgroundColor: 'rgba(255, 255, 255, 0.05)' }]}>
+        <Text style={[globalStyles.sectionTitle, { fontSize: 14, marginBottom: 8 }]}>Combat Summary</Text>
+        
+        <View style={globalStyles.resultRow}>
+          <Text style={globalStyles.resultLabel}>Successful Hits:</Text>
+          <Text style={globalStyles.resultValue}>{results.details?.successfulHits || '0'}</Text>
+        </View>
+        
+        <View style={globalStyles.resultRow}>
+          <Text style={globalStyles.resultLabel}>Successful Wounds:</Text>
+          <Text style={globalStyles.resultValue}>{results.details?.successfulWounds || '0'}</Text>
+        </View>
+        
+        <View style={[globalStyles.resultRow, { borderBottomWidth: 0 }]}>
+          <Text style={globalStyles.resultLabel}>Failed Saves:</Text>
+          <Text style={globalStyles.resultValue}>{results.details?.failedSaves || '0'}</Text>
+        </View>
+      </View>
+
       {results.details && results.details.hazardousDamage && parseFloat(results.details.hazardousDamage) > 0 && (
         <View style={[globalStyles.resultRow, { backgroundColor: 'rgba(204, 0, 0, 0.1)', padding: 8, marginTop: 10 }]}>
           <Text style={[globalStyles.resultLabel, { color: '#cc0000' }]}>Hazardous (self damage):</Text>
