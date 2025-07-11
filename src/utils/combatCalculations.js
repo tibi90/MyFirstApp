@@ -77,10 +77,12 @@ export const getFailedSaveProbability = (armorSave, armorPiercing, modifiers = {
   // Convert AP to number (0, -1, -2, etc.)
   const ap = parseInt(armorPiercing);
   
-  // Apply cover if applicable
+  // Apply AP first
   let modifiedSave = baseSave - ap;
+  
+  // Apply cover if applicable (improves save by 1, but can't go better than 3+)
   if (modifiers.cover) {
-    modifiedSave -= 1; // Cover improves save by 1
+    modifiedSave = Math.max(3, modifiedSave - 1);
   }
   
   // Check invulnerable save
@@ -174,14 +176,6 @@ export const calculateAverageWounds = (attackerProfile, defenderProfile, modifie
   // Get base wound probability
   let woundRate = getWoundProbability(weaponStrength, toughness, modifiers);
   
-  // Calculate critical wounds from Anti-X
-  let criticalWoundsFromAnti = 0;
-  if (modifiers.antiTarget && modifiers.antiTargetThreshold) {
-    const antiMap = { '2+': 5/6, '3+': 4/6, '4+': 3/6, '5+': 2/6, '6+': 1/6 };
-    const antiThreshold = antiMap[modifiers.antiTargetThreshold] || 0;
-    // Anti-X creates critical wounds on unmodified rolls meeting threshold
-    criticalWoundsFromAnti = hitsToWound * antiThreshold;
-  }
   
   // Apply wound re-rolls (including Twin-linked)
   if (modifiers.rerollWounds || modifiers.twinLinked) {
@@ -199,8 +193,8 @@ export const calculateAverageWounds = (attackerProfile, defenderProfile, modifie
   // Calculate mortal wounds from Devastating Wounds
   let mortalWounds = 0;
   if (modifiers.devastatingWounds) {
-    // Both natural 6s to wound AND Anti-X critical wounds become mortal wounds
-    const totalCriticalWounds = natural6sToWound + criticalWoundsFromAnti;
+    // Natural 6s to wound become mortal wounds
+    const totalCriticalWounds = natural6sToWound;
     mortalWounds = totalCriticalWounds * damage;
     
     // Mortal wounds still get Feel No Pain
@@ -215,7 +209,7 @@ export const calculateAverageWounds = (attackerProfile, defenderProfile, modifie
   let woundsNeedingSaves = normalWounds + lethalHitWounds;
   if (modifiers.devastatingWounds) {
     // Remove the critical wounds that became mortal wounds
-    woundsNeedingSaves -= (natural6sToWound + criticalWoundsFromAnti);
+    woundsNeedingSaves -= natural6sToWound;
   }
   
   // Get failed save rate
@@ -235,13 +229,6 @@ export const calculateAverageWounds = (attackerProfile, defenderProfile, modifie
   
   const averageWounds = normalDamage + mortalWounds;
   
-  // Hazardous damage to self (informational only)
-  let hazardousDamage = 0;
-  if (modifiers.hazardous) {
-    // After all attacks resolved, roll D6 per model that attacked
-    // On a 1, suffer 3 mortal wounds
-    hazardousDamage = models * (1/6) * 3;
-  }
   
   // Calculate confidence intervals for final damage
   const damageStdDev = Math.sqrt(averageWounds * 0.25); // Simplified approximation
@@ -261,9 +248,7 @@ export const calculateAverageWounds = (attackerProfile, defenderProfile, modifie
       totalHits: (expectedHits + extraHitsFromSustained).toFixed(1),
       sustainedHits: extraHitsFromSustained.toFixed(1),
       lethalHitWounds: lethalHitWounds.toFixed(2),
-      criticalWounds: (natural6sToWound + criticalWoundsFromAnti).toFixed(2),
-      antiXCriticals: criticalWoundsFromAnti.toFixed(2),
-      hazardousDamage: hazardousDamage.toFixed(2),
+      criticalWounds: natural6sToWound.toFixed(2),
       successfulHits: successfulHits.toFixed(1),
       successfulWounds: totalWoundsInflicted.toFixed(1),
       failedSaves: failedSaves.toFixed(1),

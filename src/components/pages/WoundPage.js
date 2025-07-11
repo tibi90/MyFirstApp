@@ -73,26 +73,11 @@ const WoundPage = ({ values, onValueChange }) => {
   ];
 
   const specialRules = [
-    { key: 'antiTarget', label: 'Anti-X', type: 'toggle' },
     { key: 'devastatingWounds', label: 'Devastating Wounds', type: 'toggle' },
     { key: 'precision', label: 'Precision', type: 'toggle' },
   ];
 
   const conditionalInputs = [];
-  if (values.antiTarget) {
-    conditionalInputs.push({
-      key: 'antiTargetThreshold',
-      label: 'Anti-X Threshold',
-      type: 'picker',
-      options: [
-        { label: '2+', value: '2+' },
-        { label: '3+', value: '3+' },
-        { label: '4+', value: '4+' },
-        { label: '5+', value: '5+' },
-        { label: '6+', value: '6+' },
-      ],
-    });
-  }
 
   // Calculate wound chance and distribution
   useEffect(() => {
@@ -128,12 +113,6 @@ const WoundPage = ({ values, onValueChange }) => {
     // Calculate base chance
     let baseChance = (7 - modifiedWound) / 6;
     
-    // Apply Anti-X
-    if (values.antiTarget) {
-      const antiThreshold = parseInt(values.antiTargetThreshold.replace('+', ''));
-      const antiChance = (7 - antiThreshold) / 6;
-      baseChance = Math.max(baseChance, antiChance);
-    }
     
     // Apply re-rolls with proper handling
     const rerollType = values.rerollWounds || 'None';

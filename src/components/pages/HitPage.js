@@ -81,7 +81,6 @@ const HitPage = ({ values, onValueChange }) => {
   ];
 
   const additionalRules = [
-    { key: 'hazardous', label: 'Hazardous', type: 'toggle' },
     { key: 'twinLinked', label: 'Twin-linked', type: 'toggle' },
   ];
 
@@ -154,11 +153,8 @@ const HitPage = ({ values, onValueChange }) => {
     const rerollType = values.rerollHits || 'None';
     const adjustedHitProb = adjustProbabilityForRerolls(baseChance, rerollType, critRate);
     
-    // Twin-linked gives re-roll if no other re-roll active
+    // No hit re-roll from Twin-linked (it only affects wounds)
     let finalHitProb = adjustedHitProb;
-    if (values.twinLinked && rerollType === 'None') {
-      finalHitProb = adjustProbabilityForRerolls(baseChance, 'Re-roll All Failed', critRate);
-    }
     
     setHitChance(Math.round(finalHitProb * 100));
     
