@@ -178,10 +178,18 @@ export const calculateAverageWounds = (attackerProfile, defenderProfile, modifie
   
   
   // Apply wound re-rolls (including Twin-linked)
-  if (modifiers.rerollWounds || modifiers.twinLinked) {
-    // Twin-linked always allows wound re-rolls
-    const rerollType = modifiers.twinLinked ? 'Re-roll All Failed' : modifiers.rerollWounds;
-    woundRate = applyRerolls(woundRate, rerollType);
+  let finalRerollType = modifiers.rerollWounds || 'None';
+  
+  // Twin-linked gives "Re-roll All Failed", use the better option
+  if (modifiers.twinLinked) {
+    if (finalRerollType === 'None' || finalRerollType === 'Re-roll 1s') {
+      finalRerollType = 'Re-roll All Failed';
+    }
+    // Keep existing reroll if it's better (Re-roll All)
+  }
+  
+  if (finalRerollType !== 'None') {
+    woundRate = applyRerolls(woundRate, finalRerollType);
   }
   
   // Calculate normal wounds

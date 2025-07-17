@@ -80,9 +80,7 @@ const HitPage = ({ values, onValueChange }) => {
     },
   ];
 
-  const additionalRules = [
-    { key: 'twinLinked', label: 'Twin-linked', type: 'toggle' },
-  ];
+  const additionalRules = [];
 
   // Calculate hit chance and total hits
   useEffect(() => {
@@ -186,7 +184,7 @@ const HitPage = ({ values, onValueChange }) => {
     } else {
       setSustainedHitsCount(0);
     }
-  }, [values.weaponSkill, values.hitModifier, values.rerollHits, values.torrent, values.twinLinked,
+  }, [values.weaponSkill, values.hitModifier, values.rerollHits, values.torrent,
       values.models, values.attacksPerModel, values.blast, values.unitSize, 
       values.sustainedHits, values.sustainedHitsValue, values.criticalOn5Plus]);
 
@@ -214,13 +212,6 @@ const HitPage = ({ values, onValueChange }) => {
           onValueChange={onValueChange}
         />
       )}
-
-      <InputSection
-        title="Additional Rules"
-        inputs={additionalRules}
-        values={values}
-        onValueChange={onValueChange}
-      />
 
       {/* Hit Probability Display */}
       <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary }]}>

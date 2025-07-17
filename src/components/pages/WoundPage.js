@@ -73,6 +73,7 @@ const WoundPage = ({ values, onValueChange }) => {
   ];
 
   const specialRules = [
+    { key: 'twinLinked', label: 'Twin-linked', type: 'toggle' },
     { key: 'devastatingWounds', label: 'Devastating Wounds', type: 'toggle' },
     { key: 'precision', label: 'Precision', type: 'toggle' },
   ];
@@ -115,7 +116,15 @@ const WoundPage = ({ values, onValueChange }) => {
     
     
     // Apply re-rolls with proper handling
-    const rerollType = values.rerollWounds || 'None';
+    // Twin-linked gives "Re-roll All Failed" for wounds, use the better option
+    let rerollType = values.rerollWounds || 'None';
+    if (values.twinLinked) {
+      // If Twin-linked is active, use the better of the two reroll options
+      if (rerollType === 'None' || rerollType === 'Re-roll 1s') {
+        rerollType = 'Re-roll All Failed';
+      }
+      // Otherwise keep the existing reroll type if it's better (Re-roll All)
+    }
     const critRate = 1/6; // Standard critical rate for wounds
     const adjustedWoundProb = adjustProbabilityForRerolls(baseChance, rerollType, critRate);
     
@@ -129,7 +138,7 @@ const WoundPage = ({ values, onValueChange }) => {
     setWoundStatistics(stats);
     setTotalWounds(parseFloat(stats.expectedValue));
   }, [values.weaponStrength, values.toughness, values.woundModifier, values.rerollWounds, 
-      values.antiTarget, values.antiTargetThreshold, values.totalHits]);
+      values.twinLinked, values.totalHits]);
 
   return (
     <ScrollView style={globalStyles.scrollView}>
