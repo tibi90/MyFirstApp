@@ -13,13 +13,13 @@ const ResultsDisplay = ({ results }) => {
       <Text style={globalStyles.resultsTitle}>Combat Results</Text>
       
       <Text style={globalStyles.mainResult}>
-        {Math.round(parseFloat(results.averageWounds))} wounds
+        {Math.round(parseFloat(results.averageWounds))} damage
       </Text>
       <Text style={[globalStyles.resultLabel, { textAlign: 'center', marginBottom: 8 }]}>
-        Most Likely Result
+        Average Result (Rounded)
       </Text>
       <Text style={[globalStyles.resultLabel, { textAlign: 'center', marginBottom: 20, fontSize: 14 }]}>
-        Average: {results.averageWounds} wounds
+        Average: {results.averageWounds} damage
       </Text>
 
       {/* Confidence Intervals */}
@@ -30,14 +30,14 @@ const ResultsDisplay = ({ results }) => {
           <View style={globalStyles.resultRow}>
             <Text style={globalStyles.resultLabel}>68% Confidence:</Text>
             <Text style={globalStyles.resultValue}>
-              {Math.round(parseFloat(results.confidence.interval68.lower))}-{Math.round(parseFloat(results.confidence.interval68.upper))} wounds
+              {Math.round(parseFloat(results.confidence.interval68.lower))}-{Math.round(parseFloat(results.confidence.interval68.upper))} damage
             </Text>
           </View>
           
           <View style={[globalStyles.resultRow, { borderBottomWidth: 0 }]}>
             <Text style={globalStyles.resultLabel}>95% Confidence:</Text>
             <Text style={globalStyles.resultValue}>
-              {Math.round(parseFloat(results.confidence.interval95.lower))}-{Math.round(parseFloat(results.confidence.interval95.upper))} wounds
+              {Math.round(parseFloat(results.confidence.interval95.lower))}-{Math.round(parseFloat(results.confidence.interval95.upper))} damage
             </Text>
           </View>
         </View>
