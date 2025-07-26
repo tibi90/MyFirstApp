@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 import InputSection from '../InputSection';
 import { globalStyles, colors } from '../../styles/styles';
+import { dimensions } from '../../utils/responsive';
 
 const SavePage = ({ values, onValueChange }) => {
   const [saveChance, setSaveChance] = useState(0);
@@ -98,7 +99,7 @@ const SavePage = ({ values, onValueChange }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ flex: 1, paddingHorizontal: 16 }}>
+      <View style={{ flex: 1, paddingHorizontal: dimensions.paddingLarge }}>
         <InputSection
           title="Defensive Profile"
           inputs={saveInputs}
@@ -108,14 +109,14 @@ const SavePage = ({ values, onValueChange }) => {
         />
 
         {/* Compact Save Display */}
-        <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary, marginVertical: 4, padding: 12, flex: 1, justifyContent: 'center' }]}>
-          <Text style={[globalStyles.mainResult, { color: colors.secondary, fontSize: 48 }]}>
+        <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary, marginVertical: dimensions.paddingSmall, padding: dimensions.paddingMedium, flex: 1, justifyContent: 'center' }]}>
+          <Text style={[globalStyles.mainResult, { color: colors.secondary }]}>
             {totalSurvival}%
           </Text>
-          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, fontSize: 16 }]}>
+          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, fontSize: dimensions.fontMedium }]}>
             Chance to save
           </Text>
-          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginTop: 8 }]}>
+          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginTop: dimensions.paddingMedium }]}>
             {values.armorSave} save (AP{values.armorPiercing}{values.cover ? ', Cover' : ''})
             {values.invulnSave !== 'None' && ` / ${values.invulnSave}`}
             {values.feelNoPain !== 'None' && ` / ${values.feelNoPain} FNP`}

@@ -7,6 +7,7 @@ import {
 import { Picker } from '@react-native-picker/picker';
 import ToggleSwitch from './ToggleSwitch';
 import { globalStyles, colors } from '../styles/styles';
+import { dimensions, moderateScale } from '../utils/responsive';
 
 const InputSection = ({ title, inputs, values, onValueChange, errors = {}, compact = false }) => {
   const renderInput = (input) => {
@@ -18,7 +19,7 @@ const InputSection = ({ title, inputs, values, onValueChange, errors = {}, compa
         <View key={input.key} style={[globalStyles.inputRow, compact && { marginBottom: 0 }]}>
           {!compact && <Text style={globalStyles.label}>{input.label}</Text>}
           <TextInput
-            style={[globalStyles.input, compact && { height: 36, padding: 8 }, error && { borderColor: colors.error }]}
+            style={[globalStyles.input, compact && { height: dimensions.inputHeightCompact, padding: dimensions.paddingMedium }, error && { borderColor: colors.error }]}
             value={String(value)}
             onChangeText={(text) => {
               const num = parseInt(text) || 0;
@@ -37,11 +38,11 @@ const InputSection = ({ title, inputs, values, onValueChange, errors = {}, compa
       return (
         <View key={input.key} style={[globalStyles.inputRow, compact && { marginBottom: 0 }]}>
           {!compact && <Text style={globalStyles.label}>{input.label}</Text>}
-          <View style={[globalStyles.picker, compact && { height: 36 }, error && { borderColor: colors.error }]}>
+          <View style={[globalStyles.picker, compact && { height: dimensions.inputHeightCompact }, error && { borderColor: colors.error }]}>
             <Picker
               selectedValue={value}
               onValueChange={(itemValue) => onValueChange(input.key, itemValue)}
-              style={{ color: colors.text, height: compact ? 36 : 44 }}
+              style={{ color: colors.text, height: compact ? dimensions.inputHeightCompact : dimensions.inputHeight }}
               dropdownIconColor={colors.text}
               mode="dropdown"
               prompt={input.label}
@@ -97,13 +98,13 @@ const InputSection = ({ title, inputs, values, onValueChange, errors = {}, compa
 
   if (compact) {
     return (
-      <View style={[globalStyles.section, { marginVertical: 4, padding: 12 }]}>
-        <Text style={[globalStyles.sectionTitle, { fontSize: 16, marginBottom: 8 }]}>{title}</Text>
+      <View style={[globalStyles.section, { marginVertical: dimensions.paddingSmall, padding: dimensions.paddingMedium }]}>
+        <Text style={[globalStyles.sectionTitle, { fontSize: dimensions.fontMedium, marginBottom: dimensions.paddingMedium }]}>{title}</Text>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
           {inputs.map(input => {
             if (input.type === 'toggle') {
               return (
-                <View key={input.key} style={{ width: '50%', paddingRight: 4, marginBottom: 8 }}>
+                <View key={input.key} style={{ width: '50%', paddingRight: dimensions.paddingSmall, marginBottom: dimensions.paddingMedium }}>
                   <ToggleSwitch
                     label={input.label}
                     value={values[input.key]}
@@ -114,8 +115,8 @@ const InputSection = ({ title, inputs, values, onValueChange, errors = {}, compa
               );
             }
             return (
-              <View key={input.key} style={{ width: '100%', marginBottom: 8 }}>
-                {compact && <Text style={[globalStyles.label, { fontSize: 12, marginBottom: 4 }]}>{input.label}</Text>}
+              <View key={input.key} style={{ width: '100%', marginBottom: dimensions.paddingMedium }}>
+                {compact && <Text style={[globalStyles.label, { fontSize: dimensions.fontTiny, marginBottom: dimensions.paddingSmall }]}>{input.label}</Text>}
                 {renderInput(input)}
               </View>
             );

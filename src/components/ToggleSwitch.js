@@ -6,6 +6,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { colors } from '../styles/styles';
+import { dimensions, moderateScale, verticalScale } from '../utils/responsive';
 
 const ToggleSwitch = ({ label, value, onValueChange, compact = false }) => {
   return (
@@ -27,51 +28,51 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 12,
-    minHeight: 44,
+    paddingVertical: verticalScale(12),
+    minHeight: dimensions.inputHeight,
   },
   label: {
     flex: 1,
-    fontSize: 14,
+    fontSize: dimensions.fontSmall,
     color: colors.text,
-    marginRight: 12,
+    marginRight: dimensions.paddingMedium,
   },
   switch: {
-    width: 50,
-    height: 30,
-    borderRadius: 15,
+    width: moderateScale(50),
+    height: moderateScale(30),
+    borderRadius: moderateScale(15),
     backgroundColor: colors.border,
-    padding: 2,
+    padding: moderateScale(2),
   },
   switchActive: {
     backgroundColor: colors.primary,
   },
   thumb: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
+    width: moderateScale(26),
+    height: moderateScale(26),
+    borderRadius: moderateScale(13),
     backgroundColor: colors.text,
   },
   thumbActive: {
-    transform: [{ translateX: 20 }],
+    transform: [{ translateX: moderateScale(20) }],
   },
   containerCompact: {
-    paddingVertical: 6,
-    minHeight: 32,
+    paddingVertical: verticalScale(6),
+    minHeight: dimensions.inputHeightCompact,
   },
   labelCompact: {
-    fontSize: 12,
+    fontSize: dimensions.fontTiny,
   },
   switchCompact: {
-    width: 40,
-    height: 24,
+    width: moderateScale(40),
+    height: moderateScale(24),
   },
   thumbCompact: {
-    width: 20,
-    height: 20,
+    width: moderateScale(20),
+    height: moderateScale(20),
   },
   thumbActiveCompact: {
-    transform: [{ translateX: 16 }],
+    transform: [{ translateX: moderateScale(16) }],
   },
 });
 

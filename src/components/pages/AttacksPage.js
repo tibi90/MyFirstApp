@@ -8,6 +8,7 @@ import {
 import { Picker } from '@react-native-picker/picker';
 import ToggleSwitch from '../ToggleSwitch';
 import { globalStyles, colors } from '../../styles/styles';
+import { dimensions, moderateScale } from '../../utils/responsive';
 
 const AttacksPage = ({ values, onValueChange }) => {
   const [diceCount, setDiceCount] = useState('0');
@@ -51,16 +52,16 @@ const AttacksPage = ({ values, onValueChange }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ flex: 1, paddingHorizontal: 16 }}>
+      <View style={{ flex: 1, paddingHorizontal: dimensions.paddingLarge }}>
         {/* Compact Unit Configuration */}
-        <View style={[globalStyles.section, { marginVertical: 4, padding: 12 }]}>
-          <Text style={[globalStyles.sectionTitle, { fontSize: 16, marginBottom: 8 }]}>Unit Configuration</Text>
+        <View style={[globalStyles.section, { marginVertical: dimensions.paddingSmall, padding: dimensions.paddingMedium }]}>
+          <Text style={[globalStyles.sectionTitle, { fontSize: dimensions.fontMedium, marginBottom: dimensions.paddingMedium }]}>Unit Configuration</Text>
           
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <View style={{ flex: 1, marginRight: 8 }}>
-              <Text style={[globalStyles.label, { fontSize: 12, marginBottom: 4 }]}>Number of Models</Text>
+            <View style={{ flex: 1, marginRight: dimensions.paddingMedium }}>
+              <Text style={[globalStyles.label, { fontSize: dimensions.fontTiny, marginBottom: dimensions.paddingSmall }]}>Number of Models</Text>
               <TextInput
-                style={[globalStyles.input, { height: 36, padding: 8 }]}
+                style={[globalStyles.input, { height: dimensions.inputHeightCompact, padding: dimensions.paddingMedium }]}
                 value={String(values.models)}
                 onChangeText={(text) => onValueChange('models', parseInt(text) || 0)}
                 keyboardType="numeric"
@@ -68,10 +69,10 @@ const AttacksPage = ({ values, onValueChange }) => {
               />
             </View>
             
-            <View style={{ flex: 1, marginLeft: 8 }}>
-              <Text style={[globalStyles.label, { fontSize: 12, marginBottom: 4 }]}>Attacks per Model</Text>
+            <View style={{ flex: 1, marginLeft: dimensions.paddingMedium }}>
+              <Text style={[globalStyles.label, { fontSize: dimensions.fontTiny, marginBottom: dimensions.paddingSmall }]}>Attacks per Model</Text>
               <TextInput
-                style={[globalStyles.input, { height: 36, padding: 8 }, isUsingDice && { backgroundColor: colors.surface, opacity: 0.5 }]}
+                style={[globalStyles.input, { height: dimensions.inputHeightCompact, padding: dimensions.paddingMedium }, isUsingDice && { backgroundColor: colors.surface, opacity: 0.5 }]}
                 value={isUsingDice ? '' : String(values.attacksPerModel)}
                 onChangeText={(text) => {
                   setDiceCount('0');
@@ -88,10 +89,10 @@ const AttacksPage = ({ values, onValueChange }) => {
           </View>
           
           {/* Compact D6 Option */}
-          <View style={{ marginTop: 12 }}>
-            <Text style={[globalStyles.label, { fontSize: 12, marginBottom: 4 }]}>Or use D6 dice</Text>
+          <View style={{ marginTop: dimensions.paddingMedium }}>
+            <Text style={[globalStyles.label, { fontSize: dimensions.fontTiny, marginBottom: dimensions.paddingSmall }]}>Or use D6 dice</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <View style={[globalStyles.picker, { flex: 1, height: 36, marginRight: 8 }]}>
+              <View style={[globalStyles.picker, { flex: 1, height: dimensions.inputHeightCompact, marginRight: dimensions.paddingMedium }]}>
                 <Picker
                   selectedValue={diceCount}
                   onValueChange={(value) => {
@@ -100,7 +101,7 @@ const AttacksPage = ({ values, onValueChange }) => {
                       setIsUsingDice(true);
                     }
                   }}
-                  style={{ color: colors.text, height: 36 }}
+                  style={{ color: colors.text, height: dimensions.inputHeightCompact }}
                   dropdownIconColor={colors.text}
                 >
                   <Picker.Item label="0 D6" value="0" />
@@ -113,10 +114,10 @@ const AttacksPage = ({ values, onValueChange }) => {
                 </Picker>
               </View>
               
-              <Text style={{ color: colors.text, fontSize: 18, marginHorizontal: 8 }}>+</Text>
+              <Text style={{ color: colors.text, fontSize: dimensions.fontMedium, marginHorizontal: dimensions.paddingMedium }}>+</Text>
               
               <TextInput
-                style={[globalStyles.input, { flex: 1, height: 36, padding: 8 }]}
+                style={[globalStyles.input, { flex: 1, height: dimensions.inputHeightCompact, padding: dimensions.paddingMedium }]}
                 value={fixedBonus}
                 onChangeText={(text) => {
                   setFixedBonus(text);
@@ -130,7 +131,7 @@ const AttacksPage = ({ values, onValueChange }) => {
             </View>
             
             {(diceCount !== '0' || fixedBonus !== '0') && (
-              <Text style={{ color: colors.secondary, textAlign: 'center', marginTop: 4, fontSize: 12 }}>
+              <Text style={{ color: colors.secondary, textAlign: 'center', marginTop: dimensions.paddingSmall, fontSize: dimensions.fontTiny }}>
                 Average: {averageAttacks !== null ? averageAttacks.toFixed(1) : '0'} attacks
               </Text>
             )}
@@ -138,8 +139,8 @@ const AttacksPage = ({ values, onValueChange }) => {
         </View>
 
         {/* Special Rules */}
-        <View style={[globalStyles.section, { marginVertical: 4, padding: 12 }]}>
-          <Text style={[globalStyles.sectionTitle, { fontSize: 16, marginBottom: 8 }]}>Special Rules</Text>
+        <View style={[globalStyles.section, { marginVertical: dimensions.paddingSmall, padding: dimensions.paddingMedium }]}>
+          <Text style={[globalStyles.sectionTitle, { fontSize: dimensions.fontMedium, marginBottom: dimensions.paddingMedium }]}>Special Rules</Text>
           <ToggleSwitch
             label="Blast (+1 attack per 5 enemy models)"
             value={values.blast}
@@ -149,14 +150,14 @@ const AttacksPage = ({ values, onValueChange }) => {
         </View>
 
         {/* Compact Results Display */}
-        <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary, marginVertical: 4, padding: 12, flex: 1, justifyContent: 'center' }]}>
-          <Text style={[globalStyles.mainResult, { color: colors.secondary, fontSize: 48 }]}>
+        <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary, marginVertical: dimensions.paddingSmall, padding: dimensions.paddingMedium, flex: 1, justifyContent: 'center' }]}>
+          <Text style={[globalStyles.mainResult, { color: colors.secondary }]}>
             {totalAttacks}
           </Text>
-          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, fontSize: 16 }]}>
+          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, fontSize: dimensions.fontMedium }]}>
             Total Attacks
           </Text>
-          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginTop: 4 }]}>
+          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginTop: dimensions.paddingSmall }]}>
             {values.models} models × {values.attacksPerModel} attacks
           </Text>
         </View>

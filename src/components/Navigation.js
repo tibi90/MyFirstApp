@@ -12,6 +12,7 @@ import WoundPage from './pages/WoundPage';
 import SavePage from './pages/SavePage';
 import ResultsPage from './pages/ResultsPage';
 import { globalStyles, colors } from '../styles/styles';
+import { dimensions, moderateScale, verticalScale } from '../utils/responsive';
 
 const STORAGE_KEY = '@wh40k_calculator_values';
 
@@ -175,17 +176,17 @@ const styles = StyleSheet.create({
   progressContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingVertical: 20,
-    paddingHorizontal: 16,
+    paddingVertical: verticalScale(20),
+    paddingHorizontal: dimensions.paddingLarge,
   },
   progressDot: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: moderateScale(40),
+    height: moderateScale(40),
+    borderRadius: moderateScale(20),
     backgroundColor: colors.surface,
     borderWidth: 2,
     borderColor: colors.border,
-    marginHorizontal: 8,
+    marginHorizontal: dimensions.paddingMedium,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -202,11 +203,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   pageTitleContainer: {
-    paddingHorizontal: 16,
-    paddingBottom: 16,
+    paddingHorizontal: dimensions.paddingLarge,
+    paddingBottom: dimensions.paddingLarge,
   },
   pageTitle: {
-    fontSize: 24,
+    fontSize: dimensions.fontXLarge,
     fontWeight: 'bold',
     color: colors.secondary,
     textAlign: 'center',
@@ -214,8 +215,8 @@ const styles = StyleSheet.create({
   navigationContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 20,
+    paddingHorizontal: dimensions.paddingLarge,
+    paddingVertical: verticalScale(20),
     backgroundColor: colors.surface,
     borderTopWidth: 1,
     borderTopColor: colors.border,
@@ -225,11 +226,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.primary,
-    paddingVertical: 14,
-    paddingHorizontal: 24,
-    borderRadius: 4,
+    paddingVertical: verticalScale(14),
+    paddingHorizontal: moderateScale(24),
+    borderRadius: moderateScale(4),
     alignItems: 'center',
-    marginHorizontal: 8,
+    marginHorizontal: dimensions.paddingMedium,
   },
   navButtonPrimary: {
     backgroundColor: colors.primary,
@@ -239,7 +240,7 @@ const styles = StyleSheet.create({
   },
   navButtonText: {
     color: colors.text,
-    fontSize: 16,
+    fontSize: dimensions.fontMedium,
     fontWeight: 'bold',
   },
 });

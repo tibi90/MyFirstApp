@@ -7,6 +7,7 @@ import {
 import ResultsDisplay from '../ResultsDisplay';
 import { calculateAverageWounds } from '../../utils/combatCalculations';
 import { globalStyles, colors } from '../../styles/styles';
+import { dimensions } from '../../utils/responsive';
 
 const ResultsPage = ({ values, onValueChange, onNavigate }) => {
   const [results, setResults] = useState(null);
@@ -100,10 +101,10 @@ const ResultsPage = ({ values, onValueChange, onNavigate }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ flex: 1, paddingHorizontal: 16, justifyContent: 'center' }}>
+      <View style={{ flex: 1, paddingHorizontal: dimensions.paddingLarge, justifyContent: 'center' }}>
         <ResultsDisplay results={results} />
         
-        <TouchableOpacity style={[globalStyles.button, { marginTop: 20 }]} onPress={handleReset}>
+        <TouchableOpacity style={[globalStyles.button, { marginTop: dimensions.paddingXLarge }]} onPress={handleReset}>
           <Text style={globalStyles.buttonText}>Reset All Values</Text>
         </TouchableOpacity>
       </View>

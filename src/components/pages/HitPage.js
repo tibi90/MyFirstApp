@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 import InputSection from '../InputSection';
 import { globalStyles, colors } from '../../styles/styles';
+import { dimensions, moderateScale, verticalScale } from '../../utils/responsive';
 import { 
   generateDistribution, 
   calculateStatistics,
@@ -188,7 +189,7 @@ const HitPage = ({ values, onValueChange }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ flex: 1, paddingHorizontal: 16 }}>
+      <View style={{ flex: 1, paddingHorizontal: dimensions.paddingLarge }}>
         <InputSection
           title="Hit Configuration"
           inputs={hitInputs}
@@ -216,11 +217,11 @@ const HitPage = ({ values, onValueChange }) => {
         )}
 
         {/* Compact Results Display */}
-        <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary, marginVertical: 4, padding: 12, flex: 1, justifyContent: 'center' }]}>
-          <Text style={[globalStyles.mainResult, { color: colors.secondary, fontSize: 48 }]}>
+        <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary, marginVertical: dimensions.paddingSmall, padding: dimensions.paddingMedium, flex: 1, justifyContent: 'center' }]}>
+          <Text style={[globalStyles.mainResult, { color: colors.secondary }]}>
             {hitStatistics ? hitStatistics.modes[0] : 0} hits
           </Text>
-          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, fontSize: 16 }]}>
+          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, fontSize: dimensions.fontMedium }]}>
             Most likely outcome ({hitStatistics ? hitStatistics.modePercentage : 0}% chance)
           </Text>
         </View>

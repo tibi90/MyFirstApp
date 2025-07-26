@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 import InputSection from '../InputSection';
 import { globalStyles, colors } from '../../styles/styles';
+import { dimensions, moderateScale } from '../../utils/responsive';
 import { 
   generateDistribution, 
   calculateStatistics,
@@ -140,13 +141,13 @@ const WoundPage = ({ values, onValueChange }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ flex: 1, paddingHorizontal: 16 }}>
+      <View style={{ flex: 1, paddingHorizontal: dimensions.paddingLarge }}>
         {/* Weapon & Target Profile in one row */}
-        <View style={[globalStyles.section, { marginVertical: 4, padding: 12 }]}>
-          <Text style={[globalStyles.sectionTitle, { fontSize: 16, marginBottom: 8 }]}>Weapon & Target</Text>
+        <View style={[globalStyles.section, { marginVertical: dimensions.paddingSmall, padding: dimensions.paddingMedium }]}>
+          <Text style={[globalStyles.sectionTitle, { fontSize: dimensions.fontMedium, marginBottom: dimensions.paddingMedium }]}>Weapon & Target</Text>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <View style={{ flex: 1, marginRight: 8 }}>
-              <Text style={[globalStyles.label, { fontSize: 12, marginBottom: 4 }]}>Weapon Strength</Text>
+            <View style={{ flex: 1, marginRight: dimensions.paddingMedium }}>
+              <Text style={[globalStyles.label, { fontSize: dimensions.fontTiny, marginBottom: dimensions.paddingSmall }]}>Weapon Strength</Text>
               <InputSection
                 inputs={[weaponInputs[0]]}
                 values={values}
@@ -154,8 +155,8 @@ const WoundPage = ({ values, onValueChange }) => {
                 compact={true}
               />
             </View>
-            <View style={{ flex: 1, marginLeft: 8 }}>
-              <Text style={[globalStyles.label, { fontSize: 12, marginBottom: 4 }]}>Target Toughness</Text>
+            <View style={{ flex: 1, marginLeft: dimensions.paddingMedium }}>
+              <Text style={[globalStyles.label, { fontSize: dimensions.fontTiny, marginBottom: dimensions.paddingSmall }]}>Target Toughness</Text>
               <InputSection
                 inputs={targetInputs}
                 values={values}
@@ -164,7 +165,7 @@ const WoundPage = ({ values, onValueChange }) => {
               />
             </View>
           </View>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 8 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: dimensions.paddingMedium }}>
             <View style={{ flex: 1, marginRight: 8 }}>
               <Text style={[globalStyles.label, { fontSize: 12, marginBottom: 4 }]}>AP</Text>
               <InputSection
@@ -213,14 +214,14 @@ const WoundPage = ({ values, onValueChange }) => {
         )}
 
         {/* Compact Results Display */}
-        <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary, marginVertical: 4, padding: 12, flex: 1, justifyContent: 'center' }]}>
-          <Text style={[globalStyles.mainResult, { color: colors.secondary, fontSize: 48 }]}>
+        <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary, marginVertical: dimensions.paddingSmall, padding: dimensions.paddingMedium, flex: 1, justifyContent: 'center' }]}>
+          <Text style={[globalStyles.mainResult, { color: colors.secondary }]}>
             {woundStatistics ? woundStatistics.modes[0] : 0} wounds
           </Text>
-          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, fontSize: 16 }]}>
+          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, fontSize: dimensions.fontMedium }]}>
             Most likely outcome ({woundStatistics ? woundStatistics.modePercentage : 0}% chance)
           </Text>
-          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginTop: 8 }]}>
+          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginTop: dimensions.paddingMedium }]}>
             S{values.weaponStrength} vs T{values.toughness}
           </Text>
         </View>
