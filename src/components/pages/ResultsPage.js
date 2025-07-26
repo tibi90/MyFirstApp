@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
   View,
-  ScrollView,
   Text,
   TouchableOpacity,
 } from 'react-native';
@@ -100,15 +99,15 @@ const ResultsPage = ({ values, onValueChange, onNavigate }) => {
   };
 
   return (
-    <ScrollView style={globalStyles.scrollView}>
-      <ResultsDisplay results={results} />
-      
-      <View style={{ paddingHorizontal: 16, marginTop: 16, marginBottom: 100 }}>
-        <TouchableOpacity style={globalStyles.button} onPress={handleReset}>
+    <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, paddingHorizontal: 16, justifyContent: 'center' }}>
+        <ResultsDisplay results={results} />
+        
+        <TouchableOpacity style={[globalStyles.button, { marginTop: 20 }]} onPress={handleReset}>
           <Text style={globalStyles.buttonText}>Reset All Values</Text>
         </TouchableOpacity>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 

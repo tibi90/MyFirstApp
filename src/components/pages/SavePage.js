@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
   View,
-  ScrollView,
   Text,
 } from 'react-native';
 import InputSection from '../InputSection';
@@ -98,43 +97,32 @@ const SavePage = ({ values, onValueChange }) => {
   }, [values.armorSave, values.invulnSave, values.feelNoPain, values.armorPiercing, values.cover]);
 
   return (
-    <ScrollView style={globalStyles.scrollView}>
-      <InputSection
-        title="Defensive Profile"
-        inputs={saveInputs}
-        values={values}
-        onValueChange={onValueChange}
-      />
+    <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, paddingHorizontal: 16 }}>
+        <InputSection
+          title="Defensive Profile"
+          inputs={saveInputs}
+          values={values}
+          onValueChange={onValueChange}
+          compact={true}
+        />
 
-      {/* Save Probability Display */}
-      <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary }]}>
-        <Text style={[globalStyles.sectionTitle, { color: colors.text }]}>Save Probabilities</Text>
-        
-        <View style={globalStyles.resultRow}>
-          <Text style={globalStyles.resultLabel}>Armor Save (AP{values.armorPiercing}{values.cover ? ', Cover' : ''}):</Text>
-          <Text style={globalStyles.resultValue}>{saveChance}%</Text>
-        </View>
-        
-        {values.invulnSave !== 'None' && (
-          <View style={globalStyles.resultRow}>
-            <Text style={globalStyles.resultLabel}>Invulnerable Save:</Text>
-            <Text style={globalStyles.resultValue}>{invulnChance}%</Text>
-          </View>
-        )}
-        
-        {values.feelNoPain !== 'None' && (
-          <View style={globalStyles.resultRow}>
-            <Text style={globalStyles.resultLabel}>Feel No Pain:</Text>
-            <Text style={globalStyles.resultValue}>{fnpChance}%</Text>
-          </View>
-        )}
-        
-        <View style={[globalStyles.resultRow, { borderTopWidth: 2, borderTopColor: colors.secondary, paddingTop: 16, marginTop: 8 }]}>
-          <Text style={[globalStyles.resultLabel, { fontSize: 16, fontWeight: 'bold' }]}>Total Survival:</Text>
-          <Text style={[globalStyles.resultValue, { fontSize: 20, color: colors.secondary }]}>{totalSurvival}%</Text>
+        {/* Compact Save Display */}
+        <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary, marginVertical: 4, padding: 12, flex: 1, justifyContent: 'center' }]}>
+          <Text style={[globalStyles.mainResult, { color: colors.secondary, fontSize: 48 }]}>
+            {totalSurvival}%
+          </Text>
+          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, fontSize: 16 }]}>
+            Chance to save
+          </Text>
+          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginTop: 8 }]}>
+            {values.armorSave} save (AP{values.armorPiercing}{values.cover ? ', Cover' : ''})
+            {values.invulnSave !== 'None' && ` / ${values.invulnSave}`}
+            {values.feelNoPain !== 'None' && ` / ${values.feelNoPain} FNP`}
+          </Text>
         </View>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 

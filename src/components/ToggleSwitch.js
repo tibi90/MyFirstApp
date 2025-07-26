@@ -7,16 +7,16 @@ import {
 } from 'react-native';
 import { colors } from '../styles/styles';
 
-const ToggleSwitch = ({ label, value, onValueChange }) => {
+const ToggleSwitch = ({ label, value, onValueChange, compact = false }) => {
   return (
     <TouchableOpacity
-      style={styles.container}
+      style={[styles.container, compact && styles.containerCompact]}
       onPress={() => onValueChange(!value)}
       activeOpacity={0.8}
     >
-      <Text style={styles.label}>{label}</Text>
-      <View style={[styles.switch, value && styles.switchActive]}>
-        <View style={[styles.thumb, value && styles.thumbActive]} />
+      <Text style={[styles.label, compact && styles.labelCompact]}>{label}</Text>
+      <View style={[styles.switch, compact && styles.switchCompact, value && styles.switchActive]}>
+        <View style={[styles.thumb, compact && styles.thumbCompact, value && (compact ? styles.thumbActiveCompact : styles.thumbActive)]} />
       </View>
     </TouchableOpacity>
   );
@@ -54,6 +54,24 @@ const styles = StyleSheet.create({
   },
   thumbActive: {
     transform: [{ translateX: 20 }],
+  },
+  containerCompact: {
+    paddingVertical: 6,
+    minHeight: 32,
+  },
+  labelCompact: {
+    fontSize: 12,
+  },
+  switchCompact: {
+    width: 40,
+    height: 24,
+  },
+  thumbCompact: {
+    width: 20,
+    height: 20,
+  },
+  thumbActiveCompact: {
+    transform: [{ translateX: 16 }],
   },
 });
 

@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import {
   View,
-  ScrollView,
   Text,
 } from 'react-native';
 import InputSection from '../InputSection';
-import ProbabilityDistribution from '../ProbabilityDistribution';
 import { globalStyles, colors } from '../../styles/styles';
 import { 
   generateDistribution, 
@@ -141,80 +139,93 @@ const WoundPage = ({ values, onValueChange }) => {
       values.twinLinked, values.totalHits]);
 
   return (
-    <ScrollView style={globalStyles.scrollView}>
-      <InputSection
-        title="Weapon Profile"
-        inputs={weaponInputs}
-        values={values}
-        onValueChange={onValueChange}
-      />
-      
-      <InputSection
-        title="Target Profile"
-        inputs={targetInputs}
-        values={values}
-        onValueChange={onValueChange}
-      />
-      
-      <InputSection
-        title="Wound Modifiers"
-        inputs={woundModifiers}
-        values={values}
-        onValueChange={onValueChange}
-      />
+    <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, paddingHorizontal: 16 }}>
+        {/* Weapon & Target Profile in one row */}
+        <View style={[globalStyles.section, { marginVertical: 4, padding: 12 }]}>
+          <Text style={[globalStyles.sectionTitle, { fontSize: 16, marginBottom: 8 }]}>Weapon & Target</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View style={{ flex: 1, marginRight: 8 }}>
+              <Text style={[globalStyles.label, { fontSize: 12, marginBottom: 4 }]}>Weapon Strength</Text>
+              <InputSection
+                inputs={[weaponInputs[0]]}
+                values={values}
+                onValueChange={onValueChange}
+                compact={true}
+              />
+            </View>
+            <View style={{ flex: 1, marginLeft: 8 }}>
+              <Text style={[globalStyles.label, { fontSize: 12, marginBottom: 4 }]}>Target Toughness</Text>
+              <InputSection
+                inputs={targetInputs}
+                values={values}
+                onValueChange={onValueChange}
+                compact={true}
+              />
+            </View>
+          </View>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 8 }}>
+            <View style={{ flex: 1, marginRight: 8 }}>
+              <Text style={[globalStyles.label, { fontSize: 12, marginBottom: 4 }]}>AP</Text>
+              <InputSection
+                inputs={[weaponInputs[1]]}
+                values={values}
+                onValueChange={onValueChange}
+                compact={true}
+              />
+            </View>
+            <View style={{ flex: 1, marginLeft: 8 }}>
+              <Text style={[globalStyles.label, { fontSize: 12, marginBottom: 4 }]}>Damage</Text>
+              <InputSection
+                inputs={[weaponInputs[2]]}
+                values={values}
+                onValueChange={onValueChange}
+                compact={true}
+              />
+            </View>
+          </View>
+        </View>
 
-      <InputSection
-        title="Special Wound Rules"
-        inputs={specialRules}
-        values={values}
-        onValueChange={onValueChange}
-      />
-
-      {conditionalInputs.length > 0 && (
         <InputSection
-          title="Conditional Options"
-          inputs={conditionalInputs}
+          title="Wound Modifiers"
+          inputs={woundModifiers}
           values={values}
           onValueChange={onValueChange}
+          compact={true}
         />
-      )}
 
-      {/* Wound Results Display */}
-      <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary }]}>
-        <Text style={[globalStyles.sectionTitle, { color: colors.text }]}>Wound Results</Text>
-        <Text style={[globalStyles.mainResult, { color: colors.secondary }]}>
-          {woundStatistics ? woundStatistics.modes[0] : 0} wounds
-        </Text>
-        <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginBottom: 4 }]}>
-          Most likely outcome ({woundStatistics ? woundStatistics.modePercentage : 0}% chance)
-        </Text>
-        <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginBottom: 8 }]}>
-          Average: {totalWounds.toFixed(1)} wounds | Wound Chance: {woundChance}%
-        </Text>
-        <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text }]}>
-          S{values.weaponStrength} vs T{values.toughness}
-        </Text>
-        {values.devastatingWounds && (
-          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginTop: 8 }]}>
-            Critical wounds ignore saves
-          </Text>
+        <InputSection
+          title="Special Rules"
+          inputs={specialRules}
+          values={values}
+          onValueChange={onValueChange}
+          compact={true}
+        />
+
+        {conditionalInputs.length > 0 && (
+          <InputSection
+            title="Conditional Options"
+            inputs={conditionalInputs}
+            values={values}
+            onValueChange={onValueChange}
+            compact={true}
+          />
         )}
-        {values.precision && (
-          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginTop: 8 }]}>
-            Precision allows targeting of attached units
+
+        {/* Compact Results Display */}
+        <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary, marginVertical: 4, padding: 12, flex: 1, justifyContent: 'center' }]}>
+          <Text style={[globalStyles.mainResult, { color: colors.secondary, fontSize: 48 }]}>
+            {woundStatistics ? woundStatistics.modes[0] : 0} wounds
           </Text>
-        )}
+          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, fontSize: 16 }]}>
+            Most likely outcome ({woundStatistics ? woundStatistics.modePercentage : 0}% chance)
+          </Text>
+          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginTop: 8 }]}>
+            S{values.weaponStrength} vs T{values.toughness}
+          </Text>
+        </View>
       </View>
-
-      {/* Probability Distribution */}
-      {woundDistribution && woundStatistics && (
-        <ProbabilityDistribution 
-          distribution={woundDistribution}
-          statistics={woundStatistics}
-          title="Wound Probability Distribution"
-        />
-      )}
-    </ScrollView>
+    </View>
   );
 };
 

@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import {
   View,
-  ScrollView,
   Text,
 } from 'react-native';
 import InputSection from '../InputSection';
-import ProbabilityDistribution from '../ProbabilityDistribution';
 import { globalStyles, colors } from '../../styles/styles';
 import { 
   generateDistribution, 
@@ -189,78 +187,45 @@ const HitPage = ({ values, onValueChange }) => {
       values.sustainedHits, values.sustainedHitsValue, values.criticalOn5Plus]);
 
   return (
-    <ScrollView style={globalStyles.scrollView}>
-      <InputSection
-        title="Hit Roll Configuration"
-        inputs={hitInputs}
-        values={values}
-        onValueChange={onValueChange}
-      />
-
-      <InputSection
-        title="Special Hit Rules"
-        inputs={specialRules}
-        values={values}
-        onValueChange={onValueChange}
-      />
-
-      {values.sustainedHits && (
+    <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, paddingHorizontal: 16 }}>
         <InputSection
-          title="Sustained Hits Options"
-          inputs={sustainedOptions.filter(i => i.visible !== false)}
+          title="Hit Configuration"
+          inputs={hitInputs}
           values={values}
           onValueChange={onValueChange}
+          compact={true}
         />
-      )}
 
-      {/* Hit Probability Display */}
-      <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary }]}>
-        <Text style={[globalStyles.sectionTitle, { color: colors.text }]}>Hit Results</Text>
-        <Text style={[globalStyles.mainResult, { color: colors.secondary }]}>
-          {hitStatistics ? hitStatistics.modes[0] : 0} hits
-        </Text>
-        <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginBottom: 4 }]}>
-          Most likely outcome ({hitStatistics ? hitStatistics.modePercentage : 0}% chance)
-        </Text>
-        <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginBottom: 8 }]}>
-          Average: {totalHits.toFixed(1)} hits | Hit Chance: {hitChance}%
-        </Text>
-        {sustainedHitsCount > 0 && (
-          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, fontSize: 14 }]}>
-            Including {sustainedHitsCount.toFixed(1)} sustained hits
-          </Text>
-        )}
-        {values.torrent && (
-          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text }]}>
-            Torrent weapons automatically hit
-          </Text>
-        )}
-        {values.lethalHits && (
-          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginTop: 8 }]}>
-            Critical hits auto-wound
-          </Text>
-        )}
+        <InputSection
+          title="Special Rules"
+          inputs={specialRules}
+          values={values}
+          onValueChange={onValueChange}
+          compact={true}
+        />
+
         {values.sustainedHits && (
-          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginTop: 8 }]}>
-            Critical hits score {values.sustainedHitsValue} extra hits
-          </Text>
+          <InputSection
+            title="Sustained Hits"
+            inputs={sustainedOptions.filter(i => i.visible !== false)}
+            values={values}
+            onValueChange={onValueChange}
+            compact={true}
+          />
         )}
-        {values.criticalOn5Plus && (
-          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginTop: 8 }]}>
-            Natural 5s and 6s count as critical hits
-          </Text>
-        )}
-      </View>
 
-      {/* Probability Distribution */}
-      {hitDistribution && hitStatistics && (
-        <ProbabilityDistribution 
-          distribution={hitDistribution}
-          statistics={hitStatistics}
-          title="Hit Probability Distribution"
-        />
-      )}
-    </ScrollView>
+        {/* Compact Results Display */}
+        <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary, marginVertical: 4, padding: 12, flex: 1, justifyContent: 'center' }]}>
+          <Text style={[globalStyles.mainResult, { color: colors.secondary, fontSize: 48 }]}>
+            {hitStatistics ? hitStatistics.modes[0] : 0} hits
+          </Text>
+          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, fontSize: 16 }]}>
+            Most likely outcome ({hitStatistics ? hitStatistics.modePercentage : 0}% chance)
+          </Text>
+        </View>
+      </View>
+    </View>
   );
 };
 
