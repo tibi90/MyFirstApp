@@ -8,7 +8,7 @@ import {
 import { Picker } from '@react-native-picker/picker';
 import ToggleSwitch from '../ToggleSwitch';
 import { globalStyles, colors } from '../../styles/styles';
-import { dimensions, moderateScale } from '../../utils/responsive';
+import { dimensions, moderateScale, contentHeight } from '../../utils/responsive';
 
 const AttacksPage = ({ values, onValueChange }) => {
   const [diceCount, setDiceCount] = useState('0');
@@ -150,7 +150,7 @@ const AttacksPage = ({ values, onValueChange }) => {
         </View>
 
         {/* Compact Results Display */}
-        <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary, marginVertical: dimensions.paddingSmall / 2, padding: dimensions.paddingSmall, flex: 1, justifyContent: 'center', maxHeight: dimensions.screenHeight * 0.25 }]}>
+        <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary, marginVertical: dimensions.paddingSmall / 2, padding: dimensions.paddingSmall, flex: 1, justifyContent: 'center', maxHeight: dimensions.contentHeight * 0.3 }]}>
           <Text style={[globalStyles.mainResult, { color: colors.secondary, fontSize: dimensions.fontHuge * 0.8, marginBottom: dimensions.paddingSmall }]}>
             {totalAttacks}
           </Text>

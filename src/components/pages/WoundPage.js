@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import InputSection from '../InputSection';
 import { globalStyles, colors } from '../../styles/styles';
-import { dimensions, moderateScale } from '../../utils/responsive';
+import { dimensions, moderateScale, contentHeight } from '../../utils/responsive';
 import { 
   generateDistribution, 
   calculateStatistics,
@@ -178,7 +178,7 @@ const WoundPage = ({ values, onValueChange }) => {
         )}
 
         {/* Compact Results Display */}
-        <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary, marginVertical: dimensions.paddingSmall / 2, padding: dimensions.paddingSmall, flex: 1, justifyContent: 'center', maxHeight: dimensions.screenHeight * 0.25 }]}>
+        <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary, marginVertical: dimensions.paddingSmall / 2, padding: dimensions.paddingSmall, flex: 1, justifyContent: 'center', maxHeight: dimensions.contentHeight * 0.25 }]}>
           <Text style={[globalStyles.mainResult, { color: colors.secondary, fontSize: dimensions.fontHuge * 0.8, marginBottom: dimensions.paddingSmall }]}>
             {woundStatistics ? woundStatistics.modes[0] : 0} wounds
           </Text>

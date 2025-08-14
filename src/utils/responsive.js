@@ -21,10 +21,17 @@ export const fontSize = (size) => {
   return newSize;
 };
 
+// Calculate available content height
+// Header ~60, Progress ~80, Title ~60, Nav buttons ~80 = ~280 total
+const headerFooterHeight = verticalScale(280);
+export const contentHeight = screenHeight - headerFooterHeight;
+
 // Responsive dimensions
 export const dimensions = {
   screenWidth,
   screenHeight,
+  contentHeight,
+  headerFooterHeight,
   // Padding and margins
   paddingSmall: moderateScale(4),
   paddingMedium: moderateScale(8),

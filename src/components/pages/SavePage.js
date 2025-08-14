@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import InputSection from '../InputSection';
 import { globalStyles, colors } from '../../styles/styles';
-import { dimensions } from '../../utils/responsive';
+import { dimensions, contentHeight } from '../../utils/responsive';
 
 const SavePage = ({ values, onValueChange }) => {
   const [saveChance, setSaveChance] = useState(0);
@@ -109,7 +109,7 @@ const SavePage = ({ values, onValueChange }) => {
         />
 
         {/* Compact Save Display */}
-        <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary, marginVertical: dimensions.paddingSmall / 2, padding: dimensions.paddingSmall, flex: 1, justifyContent: 'center', maxHeight: dimensions.screenHeight * 0.3 }]}>
+        <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary, marginVertical: dimensions.paddingSmall / 2, padding: dimensions.paddingSmall, flex: 1, justifyContent: 'center', maxHeight: dimensions.contentHeight * 0.35 }]}>
           <Text style={[globalStyles.mainResult, { color: colors.secondary, fontSize: dimensions.fontHuge * 0.8, marginBottom: dimensions.paddingSmall }]}>
             {totalSurvival}%
           </Text>

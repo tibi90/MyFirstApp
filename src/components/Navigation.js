@@ -12,7 +12,7 @@ import WoundPage from './pages/WoundPage';
 import SavePage from './pages/SavePage';
 import ResultsPage from './pages/ResultsPage';
 import { globalStyles, colors } from '../styles/styles';
-import { dimensions, moderateScale, verticalScale } from '../utils/responsive';
+import { dimensions, moderateScale, verticalScale, contentHeight } from '../utils/responsive';
 
 const STORAGE_KEY = '@wh40k_calculator_values';
 
