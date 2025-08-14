@@ -28,8 +28,8 @@ export const dimensions = {
   // Padding and margins
   paddingSmall: moderateScale(4),
   paddingMedium: moderateScale(8),
-  paddingLarge: moderateScale(16),
-  paddingXLarge: moderateScale(20),
+  paddingLarge: moderateScale(12),
+  paddingXLarge: moderateScale(16),
   
   // Component heights
   inputHeight: verticalScale(44),

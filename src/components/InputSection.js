@@ -98,8 +98,8 @@ const InputSection = ({ title, inputs, values, onValueChange, errors = {}, compa
 
   if (compact) {
     return (
-      <View style={[globalStyles.section, { marginVertical: dimensions.paddingSmall, padding: dimensions.paddingMedium }]}>
-        <Text style={[globalStyles.sectionTitle, { fontSize: dimensions.fontMedium, marginBottom: dimensions.paddingMedium }]}>{title}</Text>
+      <View style={[globalStyles.section, { marginVertical: dimensions.paddingSmall / 2, padding: dimensions.paddingSmall }]}>
+        <Text style={[globalStyles.sectionTitle, { fontSize: dimensions.fontSmall, marginBottom: dimensions.paddingSmall }]}>{title}</Text>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
           {inputs.map(input => {
             if (input.type === 'toggle') {
@@ -115,8 +115,8 @@ const InputSection = ({ title, inputs, values, onValueChange, errors = {}, compa
               );
             }
             return (
-              <View key={input.key} style={{ width: '100%', marginBottom: dimensions.paddingMedium }}>
-                {compact && <Text style={[globalStyles.label, { fontSize: dimensions.fontTiny, marginBottom: dimensions.paddingSmall }]}>{input.label}</Text>}
+              <View key={input.key} style={{ width: input.type === 'picker' ? '50%' : '100%', paddingRight: input.type === 'picker' ? dimensions.paddingSmall : 0, marginBottom: dimensions.paddingSmall }}>
+                {compact && <Text style={[globalStyles.label, { fontSize: dimensions.fontTiny, marginBottom: dimensions.paddingSmall / 2 }]}>{input.label}</Text>}
                 {renderInput(input)}
               </View>
             );

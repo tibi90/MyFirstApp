@@ -54,8 +54,8 @@ const AttacksPage = ({ values, onValueChange }) => {
     <View style={{ flex: 1 }}>
       <View style={{ flex: 1, paddingHorizontal: dimensions.paddingLarge }}>
         {/* Compact Unit Configuration */}
-        <View style={[globalStyles.section, { marginVertical: dimensions.paddingSmall, padding: dimensions.paddingMedium }]}>
-          <Text style={[globalStyles.sectionTitle, { fontSize: dimensions.fontMedium, marginBottom: dimensions.paddingMedium }]}>Unit Configuration</Text>
+        <View style={[globalStyles.section, { marginVertical: dimensions.paddingSmall / 2, padding: dimensions.paddingSmall }]}>
+          <Text style={[globalStyles.sectionTitle, { fontSize: dimensions.fontSmall, marginBottom: dimensions.paddingSmall }]}>Unit Configuration</Text>
           
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <View style={{ flex: 1, marginRight: dimensions.paddingMedium }}>
@@ -139,8 +139,8 @@ const AttacksPage = ({ values, onValueChange }) => {
         </View>
 
         {/* Special Rules */}
-        <View style={[globalStyles.section, { marginVertical: dimensions.paddingSmall, padding: dimensions.paddingMedium }]}>
-          <Text style={[globalStyles.sectionTitle, { fontSize: dimensions.fontMedium, marginBottom: dimensions.paddingMedium }]}>Special Rules</Text>
+        <View style={[globalStyles.section, { marginVertical: dimensions.paddingSmall / 2, padding: dimensions.paddingSmall }]}>
+          <Text style={[globalStyles.sectionTitle, { fontSize: dimensions.fontSmall, marginBottom: dimensions.paddingSmall }]}>Special Rules</Text>
           <ToggleSwitch
             label="Blast (+1 attack per 5 enemy models)"
             value={values.blast}
@@ -150,15 +150,12 @@ const AttacksPage = ({ values, onValueChange }) => {
         </View>
 
         {/* Compact Results Display */}
-        <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary, marginVertical: dimensions.paddingSmall, padding: dimensions.paddingMedium, flex: 1, justifyContent: 'center' }]}>
-          <Text style={[globalStyles.mainResult, { color: colors.secondary }]}>
+        <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary, marginVertical: dimensions.paddingSmall / 2, padding: dimensions.paddingSmall, flex: 1, justifyContent: 'center', maxHeight: dimensions.screenHeight * 0.25 }]}>
+          <Text style={[globalStyles.mainResult, { color: colors.secondary, fontSize: dimensions.fontHuge * 0.8, marginBottom: dimensions.paddingSmall }]}>
             {totalAttacks}
           </Text>
-          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, fontSize: dimensions.fontMedium }]}>
-            Total Attacks
-          </Text>
-          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginTop: dimensions.paddingSmall }]}>
-            {values.models} models × {values.attacksPerModel} attacks
+          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, fontSize: dimensions.fontSmall }]}>
+            Total Attacks • {values.models} × {values.attacksPerModel}
           </Text>
         </View>
       </View>

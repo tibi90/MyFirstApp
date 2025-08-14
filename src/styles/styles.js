@@ -36,7 +36,7 @@ export const globalStyles = StyleSheet.create({
     fontSize: dimensions.fontLarge,
     fontWeight: 'bold',
     color: colors.secondary,
-    marginBottom: dimensions.paddingLarge,
+    marginBottom: dimensions.paddingMedium,
     textAlign: 'center',
   },
   inputRow: {

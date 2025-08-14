@@ -142,50 +142,14 @@ const WoundPage = ({ values, onValueChange }) => {
   return (
     <View style={{ flex: 1 }}>
       <View style={{ flex: 1, paddingHorizontal: dimensions.paddingLarge }}>
-        {/* Weapon & Target Profile in one row */}
-        <View style={[globalStyles.section, { marginVertical: dimensions.paddingSmall, padding: dimensions.paddingMedium }]}>
-          <Text style={[globalStyles.sectionTitle, { fontSize: dimensions.fontMedium, marginBottom: dimensions.paddingMedium }]}>Weapon & Target</Text>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <View style={{ flex: 1, marginRight: dimensions.paddingMedium }}>
-              <Text style={[globalStyles.label, { fontSize: dimensions.fontTiny, marginBottom: dimensions.paddingSmall }]}>Weapon Strength</Text>
-              <InputSection
-                inputs={[weaponInputs[0]]}
-                values={values}
-                onValueChange={onValueChange}
-                compact={true}
-              />
-            </View>
-            <View style={{ flex: 1, marginLeft: dimensions.paddingMedium }}>
-              <Text style={[globalStyles.label, { fontSize: dimensions.fontTiny, marginBottom: dimensions.paddingSmall }]}>Target Toughness</Text>
-              <InputSection
-                inputs={targetInputs}
-                values={values}
-                onValueChange={onValueChange}
-                compact={true}
-              />
-            </View>
-          </View>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: dimensions.paddingMedium }}>
-            <View style={{ flex: 1, marginRight: 8 }}>
-              <Text style={[globalStyles.label, { fontSize: 12, marginBottom: 4 }]}>AP</Text>
-              <InputSection
-                inputs={[weaponInputs[1]]}
-                values={values}
-                onValueChange={onValueChange}
-                compact={true}
-              />
-            </View>
-            <View style={{ flex: 1, marginLeft: 8 }}>
-              <Text style={[globalStyles.label, { fontSize: 12, marginBottom: 4 }]}>Damage</Text>
-              <InputSection
-                inputs={[weaponInputs[2]]}
-                values={values}
-                onValueChange={onValueChange}
-                compact={true}
-              />
-            </View>
-          </View>
-        </View>
+        {/* Direct input rendering for weapon/target */}
+        <InputSection
+          title="Weapon & Target"
+          inputs={[...weaponInputs, ...targetInputs]}
+          values={values}
+          onValueChange={onValueChange}
+          compact={true}
+        />
 
         <InputSection
           title="Wound Modifiers"
@@ -214,15 +178,12 @@ const WoundPage = ({ values, onValueChange }) => {
         )}
 
         {/* Compact Results Display */}
-        <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary, marginVertical: dimensions.paddingSmall, padding: dimensions.paddingMedium, flex: 1, justifyContent: 'center' }]}>
-          <Text style={[globalStyles.mainResult, { color: colors.secondary }]}>
+        <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary, marginVertical: dimensions.paddingSmall / 2, padding: dimensions.paddingSmall, flex: 1, justifyContent: 'center', maxHeight: dimensions.screenHeight * 0.25 }]}>
+          <Text style={[globalStyles.mainResult, { color: colors.secondary, fontSize: dimensions.fontHuge * 0.8, marginBottom: dimensions.paddingSmall }]}>
             {woundStatistics ? woundStatistics.modes[0] : 0} wounds
           </Text>
-          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, fontSize: dimensions.fontMedium }]}>
-            Most likely outcome ({woundStatistics ? woundStatistics.modePercentage : 0}% chance)
-          </Text>
-          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginTop: dimensions.paddingMedium }]}>
-            S{values.weaponStrength} vs T{values.toughness}
+          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, fontSize: dimensions.fontSmall }]}>
+            Most likely ({woundStatistics ? woundStatistics.modePercentage : 0}%) • S{values.weaponStrength} vs T{values.toughness}
           </Text>
         </View>
       </View>

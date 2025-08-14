@@ -109,15 +109,15 @@ const SavePage = ({ values, onValueChange }) => {
         />
 
         {/* Compact Save Display */}
-        <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary, marginVertical: dimensions.paddingSmall, padding: dimensions.paddingMedium, flex: 1, justifyContent: 'center' }]}>
-          <Text style={[globalStyles.mainResult, { color: colors.secondary }]}>
+        <View style={[globalStyles.section, { backgroundColor: colors.primary, borderColor: colors.secondary, marginVertical: dimensions.paddingSmall / 2, padding: dimensions.paddingSmall, flex: 1, justifyContent: 'center', maxHeight: dimensions.screenHeight * 0.3 }]}>
+          <Text style={[globalStyles.mainResult, { color: colors.secondary, fontSize: dimensions.fontHuge * 0.8, marginBottom: dimensions.paddingSmall }]}>
             {totalSurvival}%
           </Text>
-          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, fontSize: dimensions.fontMedium }]}>
+          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, fontSize: dimensions.fontSmall }]}>
             Chance to save
           </Text>
-          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginTop: dimensions.paddingMedium }]}>
-            {values.armorSave} save (AP{values.armorPiercing}{values.cover ? ', Cover' : ''})
+          <Text style={[globalStyles.label, { textAlign: 'center', color: colors.text, marginTop: dimensions.paddingSmall, fontSize: dimensions.fontTiny }]}>
+            {values.armorSave} (AP{values.armorPiercing}{values.cover ? ', Cover' : ''})
             {values.invulnSave !== 'None' && ` / ${values.invulnSave}`}
             {values.feelNoPain !== 'None' && ` / ${values.feelNoPain} FNP`}
           </Text>
